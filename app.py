@@ -43,15 +43,15 @@ st.markdown("""
 #Setting project Style
 
 #with open ('style.css') as f:
-#    st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
+ #   st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
     
 #===============================================================================================
 # Reading DF from google sheet
 sheet_url = 'https://docs.google.com/spreadsheets/d/1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw/edit#gid=0'
 url_1 = sheet_url.replace('/edit#gid=', '/export?format=csv&gid=')
 # update every 5 mins
-st_autorefresh(interval=1 * 60 * 1000,key=None)
-@st.experimental_memo(ttl=60)
+st_autorefresh(interval=10 * 60 * 1000,key=None)
+@st.experimental_memo(ttl=600)
 def get_data():
     df = pd.read_csv(url_1)
     return df
@@ -187,7 +187,7 @@ if selected == 'Cost Report':
     data_pair1 = [list(z) for z in zip(xd, yd)]
     data_pair1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="1050px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="600px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair1)
     .set_global_opts(title_opts=opts.TitleOpts(title="Total Cost by Branch"))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -202,7 +202,7 @@ if selected == 'Cost Report':
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     
     line = (
-            Line(init_opts=opts.InitOpts( width="1050px", height="500px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="600px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_dat['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -235,10 +235,11 @@ if selected == 'Cost Report':
     
     
     
-    
-    #with st.expander('View Visuals'):
-    components.html(pie1 , width=1200, height=500)
-    components.html(line , width=1200, height=500)
+    l1,l2 = st.columns(2)
+    with l1:
+        components.html(pie1 , width=1000, height=500)
+    with l2:
+        components.html(line , width=1000, height=500)
     #-------bar1 Chart Data---------------------------------
     cost_br = pd.pivot_table( df,columns=['ExpType'] ,index= ['Branch'] ,values='AMOUNT',aggfunc= 'sum').reset_index()
     admin_br =cost_br['ADMIN'].sum() 
