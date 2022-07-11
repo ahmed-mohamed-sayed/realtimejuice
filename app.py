@@ -344,11 +344,13 @@ if selected == 'Cost Report':
     #----------------Admin_data------------------------------
     dfs = df[df['ExpType'] == "ADMIN"]
     admin_d = dfs.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
-    admin_d['AVG_Per_M'] = round(admin['AMOUNT']/ len(df['MONTH'].unique()))
+    admin_d['PCT %'] = round(admin_d['AMOUNT']/ admin_d['AMOUNT'].sum()*100 ,1)
+    admin_d['AVG_Per_Month'] = round(admin_d['AMOUNT']/ len(df['MONTH'].unique()))
     #-------
     dfd = df[df['ExpType'] == "COGS"]
-    admin_c = dfd.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
-    admin_c['AVG_Per_M'] = round(admin['AMOUNT']/ len(df['MONTH'].unique()))
+    cogs_d = dfd.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
+    cogs_d['PCT %'] = round(cogs_d['AMOUNT']/ cogs_d['AMOUNT'].sum()*100,2)
+    cogs_d['AVG_Per_Month'] = round(cogs_d['AMOUNT']/ len(df['MONTH'].unique()))
     
     #------------------------------------------------------
     d1,d2 = st.columns(2)
@@ -376,14 +378,14 @@ if selected == 'Cost Report':
     with d2:
         st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> COGS  </h5> " ,unsafe_allow_html=True)
 
-        gb = GridOptionsBuilder.from_dataframe(admin_c)
+        gb = GridOptionsBuilder.from_dataframe(cogs_d)
         gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
         gb.configure_side_bar() #Add a sidebar
         #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
         gridOptions = gb.build()
 
         grid_response = AgGrid(
-        admin_c,
+        cogs_d,
         gridOptions=gridOptions,
         data_return_mode='AS_INPUT', 
         update_mode='MODEL_CHANGED', 
