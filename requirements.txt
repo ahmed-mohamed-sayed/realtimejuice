@@ -4,4 +4,4 @@ pyecharts==1.9.1
 streamlit==1.10.0
 streamlit_autorefresh==0.0.1
 streamlit_option_menu==0.3.2
-~treamlit==1.9.0
+
