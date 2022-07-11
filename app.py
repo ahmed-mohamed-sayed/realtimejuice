@@ -187,7 +187,7 @@ if selected == 'Cost Report':
     data_pair1 = [list(z) for z in zip(xd, yd)]
     data_pair1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="700px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -202,7 +202,7 @@ if selected == 'Cost Report':
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     
     line = (
-            Line(init_opts=opts.InitOpts( width="700px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_dat['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
