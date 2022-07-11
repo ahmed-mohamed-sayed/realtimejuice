@@ -187,9 +187,9 @@ if selected == 'Cost Report':
     data_pair1 = [list(z) for z in zip(xd, yd)]
     data_pair1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="600px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="700px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair1)
-    .set_global_opts(title_opts=opts.TitleOpts(title="Total Cost by Branch"))
+    .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
         
     .render_embed()
@@ -202,7 +202,7 @@ if selected == 'Cost Report':
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     
     line = (
-            Line(init_opts=opts.InitOpts( width="600px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="700px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_dat['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -221,7 +221,7 @@ if selected == 'Cost Report':
             )
             
             .set_global_opts(
-                title_opts=opts.TitleOpts(title="Total Cost During Months"),
+                title_opts=opts.TitleOpts(title=""),
                 tooltip_opts=opts.TooltipOpts(trigger="axis"),
                 toolbox_opts=opts.ToolboxOpts(is_show=True),
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
@@ -231,14 +231,12 @@ if selected == 'Cost Report':
             .render_embed()
 )
     
-    
-    
-    
-    
     l1,l2 = st.columns(2)
     with l1:
+        st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost by Branch </h5> " ,unsafe_allow_html=True)   
         components.html(pie1 , width=1000, height=500)
     with l2:
+        st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost During Months </h5> " ,unsafe_allow_html=True)   
         components.html(line , width=1000, height=500)
     #-------bar1 Chart Data---------------------------------
     cost_br = pd.pivot_table( df,columns=['ExpType'] ,index= ['Branch'] ,values='AMOUNT',aggfunc= 'sum').reset_index()
