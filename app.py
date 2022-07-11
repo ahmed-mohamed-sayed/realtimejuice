@@ -225,6 +225,7 @@ if selected == 'Cost Report':
                 tooltip_opts=opts.TooltipOpts(trigger="axis"),
                 toolbox_opts=opts.ToolboxOpts(is_show=True),
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
+                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")]
                 
             )
             
@@ -306,6 +307,7 @@ if selected == 'Cost Report':
                 tooltip_opts=opts.TooltipOpts(trigger="axis"),
                 toolbox_opts=opts.ToolboxOpts(is_show=True),
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
+                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")]
                 
             )
             
