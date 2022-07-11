@@ -51,8 +51,8 @@ st.markdown("""
 sheet_url = 'https://docs.google.com/spreadsheets/d/1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw/edit#gid=0'
 url_1 = sheet_url.replace('/edit#gid=', '/export?format=csv&gid=')
 # update every 5 mins
-st_autorefresh(interval=1* 60 * 1000,key=None)
-@st.experimental_memo(ttl=60)
+st_autorefresh(interval=10* 60 * 1000,key=None)
+@st.experimental_memo(ttl=600)
 def get_data():
     df = pd.read_csv(url_1)
     return df
@@ -359,28 +359,30 @@ if selected == 'Cost Report':
 
         gb = GridOptionsBuilder.from_dataframe(admin_d)
         gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
-        gb.configure_side_bar() #Add a sidebar
+        #gb.configure_side_bar() #Add a sidebar
         #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
         gridOptions = gb.build()
 
         grid_response = AgGrid(
         admin_d,
         gridOptions=gridOptions,
-        data_return_mode='AS_INPUT', 
+        data_return_mode='FILTERED', 
         update_mode='MODEL_CHANGED', 
-        fit_columns_on_grid_load=False,
+        fit_columns_on_grid_load=True,
         theme='blue', #Add theme color to the table
         enable_enterprise_modules=True,
         height=350, 
         width='100%',
         reload_data=True
     )
+    
+        
     with d2:
         st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> COGS  </h5> " ,unsafe_allow_html=True)
 
         gb = GridOptionsBuilder.from_dataframe(cogs_d)
         gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
-        gb.configure_side_bar() #Add a sidebar
+        #gb.configure_side_bar() #Add a sidebar
         #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
         gridOptions = gb.build()
 
@@ -389,14 +391,14 @@ if selected == 'Cost Report':
         gridOptions=gridOptions,
         data_return_mode='AS_INPUT', 
         update_mode='MODEL_CHANGED', 
-        fit_columns_on_grid_load=False,
+        fit_columns_on_grid_load=True,
         theme='blue', #Add theme color to the table
         enable_enterprise_modules=True,
         height=350, 
         width='100%',
         reload_data=True
     )
-
+        
 
 
     
