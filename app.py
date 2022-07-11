@@ -1,6 +1,7 @@
 
 from matplotlib.pyplot import legend
 import streamlit as st 
+from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 import pandas as pd 
 from streamlit_option_menu import option_menu
 from streamlit_autorefresh import st_autorefresh
@@ -104,20 +105,7 @@ if selected == 'Cost Report':
     if "ALL" in branch:
         branch = opt1   
     df = df.query( 'Branch == @branch  ')
-    # with col2:
-    #         opt3 = df['ExpType'].unique().tolist()
-    #         opt3.insert(0,'ALL')
-    #         expt = st.multiselect("Exp Type",opt3, default='ALL')
-    #         if "ALL" in expt:
-    #             expt = opt3   
-    # df = df.query('ExpType == @expt')
-    # with col3:
-    #         opt2 = df['ExpName'].unique().tolist()
-    #         opt2.insert(0,'ALL')
-    #         exp = st.multiselect("Exp Name",opt2, default='ALL')
-    #         if "ALL" in exp:
-    #             exp = opt2   
-    # df = df.query('ExpName == @exp' )
+    
     # with col4:
     #     start = st.selectbox("Start Month",df["MONTH"].unique())
     # df = df[df["MONTH"] >= start]
@@ -231,14 +219,14 @@ if selected == 'Cost Report':
             
             .render_embed()
 )
-    
-    l1,l2 = st.columns(2)
-    with l1:
-        st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost by Branch </h5> " ,unsafe_allow_html=True)   
-        components.html(pie1 , width=1000, height=500)
-    with l2:
-        st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost During Months </h5> " ,unsafe_allow_html=True)   
-        components.html(line , width=1000, height=500)
+    with st.expander('View Visuals'):   
+        l1,l2 = st.columns(2)
+        with l1:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost by Branch </h5> " ,unsafe_allow_html=True)   
+            components.html(pie1 , width=1000, height=500)
+        with l2:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost During Months </h5> " ,unsafe_allow_html=True)   
+            components.html(line , width=1000, height=500)
     #-------bar1 Chart Data---------------------------------
     cost_br = pd.pivot_table( df,columns=['ExpType'] ,index= ['Branch'] ,values='AMOUNT',aggfunc= 'sum').reset_index()
     admin_br =cost_br['ADMIN'].sum() 
@@ -324,60 +312,93 @@ if selected == 'Cost Report':
     
 
     #------------------------------------------------------
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119)   ;'> Admin Cost Analysis </h3> " ,unsafe_allow_html=True)    
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119)   ;'> Expenses Analysis </h3> " ,unsafe_allow_html=True)    
 
     #-------Fun1 Chart Data---------------------------------
-    exp_nm = df.groupby(['ExpName','ExpType']).sum()[['AMOUNT']].sort_values(by='AMOUNT',ascending=False).reset_index()
-    exp_nm= exp_nm[exp_nm['ExpType']== 'ADMIN']
-    x_data = exp_nm['ExpName'].unique().tolist()   
-    y_data = exp_nm['AMOUNT'].values.tolist()
+    # exp_nm = df.groupby(['ExpName','ExpType']).sum()[['AMOUNT']].sort_values(by='AMOUNT',ascending=False).reset_index()
+    # exp_nm= exp_nm[exp_nm['ExpType']== 'ADMIN']
+    # x_data = exp_nm['ExpName'].unique().tolist()   
+    # y_data = exp_nm['AMOUNT'].values.tolist()
     #------------------------------------------------------
     
-    data = [[x_data[i], y_data[i]] for i in range(len(x_data))]
+    # data = [[x_data[i], y_data[i]] for i in range(len(x_data))]
 
-    fun1 = (
-            Funnel(init_opts=opts.InitOpts(width="1050px", height="900px",bg_color="#f9f9f9"))
-            .add(
-                series_name="",
-                data_pair=data,
-                gap=3,
-                tooltip_opts=opts.TooltipOpts(trigger="item", formatter="{a} <br/>{b} : {c}"),
-                label_opts=opts.LabelOpts(is_show=True, position="inside"),
-                itemstyle_opts=opts.ItemStyleOpts(border_color="#f0f0f0", border_width=1),
-            )
-            .set_global_opts(title_opts=opts.TitleOpts(title="", subtitle=""),
-                             legend_opts=opts.LegendOpts( pos_top="1%"),)
-            .render_embed()
-        )
+    # fun1 = (
+    #         Funnel(init_opts=opts.InitOpts(width="1050px", height="900px",bg_color="#f9f9f9"))
+    #         .add(
+    #             series_name="",
+    #             data_pair=data,
+    #             gap=3,
+    #             tooltip_opts=opts.TooltipOpts(trigger="item", formatter="{a} <br/>{b} : {c}"),
+    #             label_opts=opts.LabelOpts(is_show=True, position="inside"),
+    #             itemstyle_opts=opts.ItemStyleOpts(border_color="#f0f0f0", border_width=1),
+    #         )
+    #         .set_global_opts(title_opts=opts.TitleOpts(title="", subtitle=""),
+    #                          legend_opts=opts.LegendOpts( pos_top="1%"),)
+    #         .render_embed()
+    #     )
  
-    components.html(fun1, width=1200, height=1000 )
+    # components.html(fun1, width=1200, height=1000 )
+    
+    
+    #----------------Admin_data------------------------------
+    dfs = df[df['ExpType'] == "ADMIN"]
+    admin_d = dfs.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
+    admin_d['AVG_Per_M'] = round(admin['AMOUNT']/ len(df['MONTH'].unique()))
+    #-------
+    dfd = df[df['ExpType'] == "COGS"]
+    admin_c = dfd.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
+    admin_c['AVG_Per_M'] = round(admin['AMOUNT']/ len(df['MONTH'].unique()))
+    
     #------------------------------------------------------
-    # col1, col2 = st.columns(2)
-    # exp_nm1 = df.groupby(['ExpName','ExpType']).sum()[['AMOUNT']].sort_values(by='AMOUNT',ascending=False).reset_index()
-    # exp_nm1= exp_nm1[exp_nm1['ExpType']== 'COGS']
-    # x1_data = exp_nm1['ExpName'].unique().tolist()   
-    # y1_data = exp_nm1['AMOUNT'].values.tolist()
-    # data_pair = [list(z) for z in zip(x1_data, y1_data)]
-    # data_pair.sort(key=lambda x: x[1])
-        
-    # pie2 = (
-    #     Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
-    # .add("", data_pair=data_pair)
-    # .set_global_opts(title_opts=opts.TitleOpts(title="New Reg"))
-    # .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
-        
-    #     .render_embed()
+    d1,d2 = st.columns(2)
+    with d1:
+        st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Admin Cost  </h5> " ,unsafe_allow_html=True)
+
+        gb = GridOptionsBuilder.from_dataframe(admin_d)
+        gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
+        gb.configure_side_bar() #Add a sidebar
+        #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
+        gridOptions = gb.build()
+
+        grid_response = AgGrid(
+        admin_d,
+        gridOptions=gridOptions,
+        data_return_mode='AS_INPUT', 
+        update_mode='MODEL_CHANGED', 
+        fit_columns_on_grid_load=False,
+        theme='blue', #Add theme color to the table
+        enable_enterprise_modules=True,
+        height=350, 
+        width='100%',
+        reload_data=True
+    )
+    with d2:
+        st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> COGS  </h5> " ,unsafe_allow_html=True)
+
+        gb = GridOptionsBuilder.from_dataframe(admin_c)
+        gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
+        gb.configure_side_bar() #Add a sidebar
+        #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
+        gridOptions = gb.build()
+
+        grid_response = AgGrid(
+        admin_c,
+        gridOptions=gridOptions,
+        data_return_mode='AS_INPUT', 
+        update_mode='MODEL_CHANGED', 
+        fit_columns_on_grid_load=False,
+        theme='blue', #Add theme color to the table
+        enable_enterprise_modules=True,
+        height=350, 
+        width='100%',
+        reload_data=True
+    )
+
+
+
     
-    # )
-    # with col1:
-    #     components.html(pie2 , width=1000, height=500)
     
-    
-    #View Data
-    expander = st.expander('View Data')
-    expander.dataframe(df.style)
-  
-  
   
   
   
