@@ -42,8 +42,8 @@ st.markdown("""
 #===============================================================================================
 #Setting project Style
 
-with open ('style.css') as f:
-    st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
+#with open ('style.css') as f:
+#    st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
     
 #===============================================================================================
 # Reading DF from google sheet
