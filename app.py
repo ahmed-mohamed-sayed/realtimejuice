@@ -259,13 +259,13 @@ if selected == 'Cost Report':
     
     
     bar1 = (
-            Bar(init_opts=opts.InitOpts(width="1000px", height="500px", bg_color="#f0f0f0"))
+            Bar(init_opts=opts.InitOpts(width="650px", height="500px", bg_color="#f0f0f0"))
             .add_xaxis(cost_br['Branch'].unique().tolist())
             .add_yaxis('Total Admin',cost_br['ADMIN'].values.tolist())
             .add_yaxis('Total COGS',cost_br['COGS'].values.tolist())  
             .add_yaxis('Total ADVER',cost_br['ADVERTISING'].values.tolist()) 
             .set_global_opts(
-                title_opts=opts.TitleOpts(title="Cost By Branch"),
+                title_opts=opts.TitleOpts(title=""),
                 legend_opts=opts.LegendOpts( pos_top="1%", pos_left="40%"),
                 toolbox_opts=opts.ToolboxOpts(),
                 datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")])
@@ -283,7 +283,7 @@ if selected == 'Cost Report':
     adver = x.query('ExpType == "ADVERTISING"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     #------------------------------------------------------
     line1 =    (
-            Line(init_opts=opts.InitOpts( width="1000px", height="500px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="500px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=x['MONTH'])
             .add_yaxis(
                  series_name="Admin",
@@ -302,7 +302,7 @@ if selected == 'Cost Report':
             )
             
             .set_global_opts(
-                title_opts=opts.TitleOpts(title="Cost Type During Months"),
+                title_opts=opts.TitleOpts(title=""),
                 tooltip_opts=opts.TooltipOpts(trigger="axis"),
                 toolbox_opts=opts.ToolboxOpts(is_show=True),
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
@@ -312,8 +312,13 @@ if selected == 'Cost Report':
             .render_embed()
         )
     with st.expander('View Visuals'):
-        components.html(bar1 , width=1000, height=500)
-        components.html(line1 , width=1000, height=500)
+        m1, m2 = st.columns(2)
+        with m1:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Cost Type By Branch </h5> " ,unsafe_allow_html=True)
+            components.html(bar1 , width=1000, height=500)
+        with m2: 
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Cost Type During Months </h5> " ,unsafe_allow_html=True)  
+            components.html(line1 , width=1000, height=500)
     
 
     #------------------------------------------------------
