@@ -50,8 +50,8 @@ with open ('style.css') as f:
 sheet_url = 'https://docs.google.com/spreadsheets/d/1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw/edit#gid=0'
 url_1 = sheet_url.replace('/edit#gid=', '/export?format=csv&gid=')
 # update every 5 mins
-st_autorefresh(interval=10 * 60 * 1000,key=None)
-@st.experimental_memo(ttl=600)
+st_autorefresh(interval=1 * 60 * 1000,key=None)
+@st.experimental_memo(ttl=60)
 def get_data():
     df = pd.read_csv(url_1)
     return df
