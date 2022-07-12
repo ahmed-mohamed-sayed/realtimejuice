@@ -1,4 +1,5 @@
 
+from ctypes import alignment
 from matplotlib.pyplot import legend
 import streamlit as st 
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
@@ -84,6 +85,7 @@ if selected == 'Sales Report':
         df = pd.read_csv(url)
         return df
     df1 = get_sales_data()
+    df2= get_sales_data()
 #===============================================================================================
     
     st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Sales Report</h1> " ,unsafe_allow_html=True)
@@ -208,34 +210,44 @@ if selected == 'Sales Report':
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales During Months </h5> " ,unsafe_allow_html=True)   
             components.html(line , width=1000, height=500)
+    
     #-------- cash_vs_on_acc_Data----------------------------------  
-    cash_s = df1['CASH'].sum()
-    onacc_s = df1['ON_ACC'].sum()
-    tawa_s = df1['T_AWAY'].sum()
-    del_s = df1['DELIVERY'].sum()
+    cash_s = df2['CASH'].sum()
+    onacc_s = df2['ON_ACC'].sum()
+    tawa_s = df2['T_AWAY'].sum()
+    del_s = df2['DELIVERY'].sum()
+    tot_s1 = df2['TOTAL'].sum()
     
     #------------cash vs on acc ----------------------------
     st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> (Cash VS On Acc) & (T.away VS On Delivery)</h3> " ,unsafe_allow_html=True)
+    #st.markdown("<h4 style='text-align: center; font-weight:bold; color: #C00000    ;'> Select Branch</h4> " ,unsafe_allow_html=True)
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#B45904;}</style>', unsafe_allow_html=True)
+
+    choose=st.radio("",("All","Zayed","Sheraton","Tagamoa"))
+    
+    
+    
     sl1, sl2, sl3, sl4 = st.columns(4)
     sl1.metric(
         label='Cash Sales %',
-        value= str(round(cash_s / tot_s,1)*100) + " %"
+        value= str(round(cash_s / tot_s1,1)*100) + " %"
     )
     sl2.metric(
         label='On Acc Sales %',
-        value= str(round(onacc_s / tot_s,1)*100) + " %"
+        value= str(round(onacc_s / tot_s1,1)*100) + " %"
     )
     sl3.metric(
         label='Take Away Sales %',
-        value= str(round(tawa_s / tot_s,1)*100) + " %"
+        value= str(round(tawa_s / tot_s1,1)*100) + " %"
     )
     sl4.metric(
         label='Delivery Sales %',
-        value= str(round(del_s / tot_s,1)*100) + " %"
+        value= str(round(del_s / tot_s1,1)*100) + " %"
     ) 
     #------------Pie2_chart_data----------------------------
-    sal_br1 = df1.groupby(['Branch']).sum()[['CASH','ON_ACC']].reset_index()
-    sal_br2 = df1.groupby(['Branch']).sum()[['T_AWAY','DELIVERY']].reset_index()
+    sal_br1 = df2.groupby(['Branch']).sum()[['CASH','ON_ACC']].reset_index()
+    sal_br2 = df2.groupby(['Branch']).sum()[['T_AWAY','DELIVERY']].reset_index()
     xs1 = ['CASH', 'ON_ACC'] 
     xs2 = ['T_Away', 'Delivery']  
     ys1 = sal_br1[['CASH','ON_ACC']].sum()
@@ -266,34 +278,50 @@ if selected == 'Sales Report':
     )  
     
     #------------Line_chart_data----------------------------
-    lin_cash = df1.groupby(['MONTH']).sum()[['CASH','ON_ACC']].reset_index()
+    lin_ca_on = df2.groupby(['MONTH']).sum()[['CASH','ON_ACC']].reset_index()
+    lin_tk_dv = df2.groupby(['MONTH']).sum()[['T_AWAY','DELIVERY']].reset_index()
     
     line1 = (
             Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
-            .add_xaxis(xaxis_data=lin_cash['MONTH'])
+            .add_xaxis(xaxis_data=lin_ca_on['MONTH'])
             .add_yaxis(
-                 series_name="Cash",
-                 y_axis=lin_cash['CASH'],
-                
+                 series_name="ON_ACC",
+                 y_axis=lin_ca_on['ON_ACC'],
              )
             .add_yaxis(
-                series_name="ON_ACC",
-                y_axis=lin_cash['ON_ACC'],
+                series_name="Cash",
+                y_axis=lin_ca_on['CASH'],
                 
             )
-            
-            
             .set_global_opts(
                 title_opts=opts.TitleOpts(title=""),
                 tooltip_opts=opts.TooltipOpts(trigger="axis"),
                 toolbox_opts=opts.ToolboxOpts(is_show=True),
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
-                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")]
+                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")] 
+            )
+            .render_embed()
+        )
+    line2 = (
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            .add_xaxis(xaxis_data=lin_tk_dv['MONTH'])
+            .add_yaxis(
+                 series_name="Delivery",
+                 y_axis=lin_tk_dv['DELIVERY'],
+             )
+            .add_yaxis(
+                series_name="T_Away",
+                y_axis=lin_tk_dv['T_AWAY'],
                 
             )
-            
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title=""),
+                tooltip_opts=opts.TooltipOpts(trigger="axis"),
+                toolbox_opts=opts.ToolboxOpts(is_show=True),
+                xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
+                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")] 
+            )
             .render_embed()
-            
         )
     with st.expander('View Visuals'):   
         m1,m2 = st.columns(2) 
@@ -307,6 +335,9 @@ if selected == 'Sales Report':
         with m3:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Cash & On Acc Sales During Months</h5> " ,unsafe_allow_html=True)   
             components.html(line1 , width=1000, height=500) 
+        with m4:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales During Months</h5> " ,unsafe_allow_html=True)   
+            components.html(line2, width=1000, height=500)
 #===============================================================================================
 # Building Cost Report     
 
