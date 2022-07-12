@@ -236,11 +236,10 @@ if selected == 'Sales Report':
     #------------Pie2_chart_data----------------------------
     sal_br1 = df1.groupby(['Branch']).sum()[['CASH','ON_ACC']].reset_index()
     sal_br2 = df1.groupby(['Branch']).sum()[['T_AWAY','DELIVERY']].reset_index()
-    #sal_brn1 = df1['CASH'].unique().tolist()
     xs1 = ['CASH', 'ON_ACC'] 
     xs2 = ['T_Away', 'Delivery']  
-    ys1 = sal_br1[['CASH','ON_ACC']].values.tolist()
-    ys2 = sal_br2[['T_AWAY','DELIVERY']].values.tolist()
+    ys1 = sal_br1[['CASH','ON_ACC']].sum()
+    ys2 = sal_br2[['T_AWAY','DELIVERY']].sum()
     #------------------------------------------------------
     data_pairs1 = [list(z) for z in zip(xs1, ys1)]
     data_pairs1.sort(key=lambda x: x[1])
@@ -265,6 +264,37 @@ if selected == 'Sales Report':
     .render_embed()
     
     )  
+    
+    #------------Line_chart_data----------------------------
+    lin_cash = df1.groupby(['MONTH']).sum()[['CASH','ON_ACC']].reset_index()
+    
+    line1 = (
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            .add_xaxis(xaxis_data=lin_cash['MONTH'])
+            .add_yaxis(
+                 series_name="Cash",
+                 y_axis=lin_cash['CASH'],
+                
+             )
+            .add_yaxis(
+                series_name="ON_ACC",
+                y_axis=lin_cash['ON_ACC'],
+                
+            )
+            
+            
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title=""),
+                tooltip_opts=opts.TooltipOpts(trigger="axis"),
+                toolbox_opts=opts.ToolboxOpts(is_show=True),
+                xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
+                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")]
+                
+            )
+            
+            .render_embed()
+            
+        )
     with st.expander('View Visuals'):   
         m1,m2 = st.columns(2) 
         with m1:
@@ -273,6 +303,10 @@ if selected == 'Sales Report':
         with m2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales</h5> " ,unsafe_allow_html=True)   
             components.html(pie2, width=1000, height=500)
+        m3,m4 = st.columns(2)
+        with m3:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Cash & On Acc Sales During Months</h5> " ,unsafe_allow_html=True)   
+            components.html(line1 , width=1000, height=500) 
 #===============================================================================================
 # Building Cost Report     
 
