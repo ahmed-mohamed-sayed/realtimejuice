@@ -14,52 +14,10 @@ from pyecharts.charts import Funnel, Bar, Line,Pie
 
 st.set_page_config(layout='wide'
                 )
-st.markdown("""
-        <style>
-        div[data-testid="metric-container"] {
-        background-color: rgba(28, 131, 225, 0.1);
-        border: 2px solid rgba(28, 131, 225, 0.1);
-        padding: 5% 5% 5% 10%;
-        border-radius: 5px;
-        border-color: #B2182B;
-        color: rgb(30, 103, 119);
-        overflow-wrap: break-word;
-        text-align: center;
-        }
-        
 
-        /* breakline for metric text         */
-        div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
-        overflow-wrap: break-word;
-        white-space: break-spaces;
-        color: #C00000;
-        font-weight: bold;
-        }
-        </style>
-        
-        """
-        , unsafe_allow_html=True)
         
 #===============================================================================================
-#Setting project Style
 
-#with open ('style.css') as f:
- #   st.markdown(f'<style>{f.read()}</style>',unsafe_allow_html=True)
-    
-#===============================================================================================
-# Reading DF from google sheet
-sheet_url = 'https://docs.google.com/spreadsheets/d/1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw/edit#gid=0'
-url_1 = sheet_url.replace('/edit#gid=', '/export?format=csv&gid=')
-# update every 5 mins
-st_autorefresh(interval=10* 60 * 1000,key=None)
-@st.experimental_memo(ttl=600)
-def get_data():
-    df = pd.read_csv(url_1)
-    return df
-df = get_data()
-df1 =  get_data()
-
-#===============================================================================================
 # Set Navigation Menu
 
 with st.sidebar:
@@ -86,13 +44,212 @@ with st.sidebar:
 # Building Sales Report   
 
 if selected == 'Sales Report':
-    st.markdown("<h2 style='text-align: center; font-weight:bold; color: #C00000;'> Sales Report</h2> " ,unsafe_allow_html=True)
+    #------Set cards style------------------
+    st.markdown("""
+        <style>
+        div[data-testid="metric-container"] {
+        background-color: #f4f9f2;
+        border: 2px solid rgba(28, 131, 225, 0.1);
+        padding: 5% 5% 5% 10%;
+        border-radius: 5px;
+        border-color: #B45904;
+        color: rgb(30, 103, 119);
+        overflow-wrap: break-word;
+        text-align: center;
+        }
+        
+
+        /* breakline for metric text         */
+        div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
+        overflow-wrap: break-word;
+        white-space: break-spaces;
+        color: #C00000;
+        font-weight: bold;
+        }
+        </style>
+        
+        """
+        , unsafe_allow_html=True)
+    #----------------------------------------
+    # Reading Sales DF from google sheet
+    sheet_id = '1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw'
+    sheet_name = 'SALES'
+    url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+    # update every 10 mins
+    st_autorefresh(interval=2* 60 * 1000,key=None)
+    @st.experimental_memo(ttl=120)
+    def get_sales_data():
+        df = pd.read_csv(url)
+        return df
+    df1 = get_sales_data()
+#===============================================================================================
     
+    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Sales Report</h1> " ,unsafe_allow_html=True)
+    
+    #----Multiselect----------------------------------
+    opt = df1["Branch"].unique().tolist()
+    opt.insert(0,'ALL')
+    branch = st.multiselect("Branch",opt, default='ALL')
+    if "ALL" in branch:
+        branch = opt  
+   
+    df1 = df1.query( 'Branch == @branch  ')
+    #-------------------------------------------------
+    #Total Sales KPI's--------------------------------
+    tot_s = df1['TOTAL'].sum()
+    tot_or = df1['NO_OREDRS'].sum()
+    avg_s = tot_s  / len(df1['MONTH'].unique())
+    avg_or = tot_or  / len(df1['MONTH'].unique())
+    
+    t1,t2, t3, t4, t5 = st.columns(5)
+    t1.metric(
+        label = 'Total Sales',
+        value = str(round(tot_s/ 1e6, 2)) + " M",
+    )
+    t2.metric(
+        label = 'Avg Sales Per Month',
+        value = str(round(avg_s/ 1e3, 2)) + " K",
+    )
+    t3.metric(
+        label = 'Total Orders',
+        value = tot_or,
+    )
+    t4.metric(
+        label = 'Avg Orders Per Month',
+        value = round(avg_or),
+    )
+    t5.metric(
+        label = 'Avg Order Value "Egp"',
+        value = round(tot_s/tot_or),
+    )
+        
+    #-------- Branch_Data----------------------------------  
+    zayed_s = df1.query('Branch == "ZAYED"')['TOTAL'].sum()
+    sharton_s = df1.query('Branch == "SHERATON"')['TOTAL'].sum()
+    tagam_s = df1.query('Branch == "TAGAMOA"')['TOTAL'].sum()
+    
+    #------------Branch_metrics----------------------------
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Total Sales  By Branch </h3> " ,unsafe_allow_html=True)    
+    b1, b2, b3= st.columns(3)
+    b1.metric(
+        label = 'Zayed Sales %',
+        value = str(round(zayed_s/tot_s, 2)*100) + " %",
+    )
+    b2.metric(
+        label = 'Sheraton Sales %',
+        value = str(round(sharton_s/tot_s, 2)*100) + " %",
+    )
+    b3.metric(
+        label = 'Tagamoa Sales %',
+        value = str(round(tagam_s/tot_s, 2)*100) + " %",
+    )
+    #------------Pie1_chart_data----------------------------
+    sal_br = df1.groupby(['Branch']).sum()[['TOTAL']].reset_index()
+    sal_brn = sal_br['Branch'].unique().tolist()
+    xs = sal_brn   
+    ys = sal_br['TOTAL'].values.tolist()
+    #------------------------------------------------------
+    data_pairs = [list(z) for z in zip(xs, ys)]
+    data_pairs.sort(key=lambda x: x[1])
+    pie1 = (
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+    .add("", data_pair=data_pairs)
+    .set_global_opts(title_opts=opts.TitleOpts(title=""))
+    .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
+        
+    .render_embed()
+    
+    )
+    #------------Line_chart_data----------------------------
+    lin_s = df1.groupby(['Branch','MONTH']).sum()[['TOTAL']].reset_index()
+    lin_sz = lin_s.query('Branch == "ZAYED"')[['TOTAL']]
+    lin_ssh = lin_s.query('Branch == "SHERATON"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
+    lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
+    
+    line = (
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            .add_xaxis(xaxis_data=lin_s['MONTH'])
+            .add_yaxis(
+                 series_name="Zayed",
+                 y_axis=lin_sz['TOTAL'],
+                
+             )
+            .add_yaxis(
+                series_name="Sheraton",
+                y_axis=lin_ssh['TOTAL'],
+                
+            )
+            .add_yaxis(
+                series_name="Tagamoa",
+                y_axis=lin_stag['TOTAL'],
+                
+            )
+            
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title=""),
+                tooltip_opts=opts.TooltipOpts(trigger="axis"),
+                toolbox_opts=opts.ToolboxOpts(is_show=True),
+                xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
+                datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")]
+                
+            )
+            
+            .render_embed()
+)
+    with st.expander('View Visuals'):   
+        l1,l2 = st.columns(2)
+        with l1:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales by Branch </h5> " ,unsafe_allow_html=True)   
+            components.html(pie1 , width=1000, height=500)
+        with l2:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales During Months </h5> " ,unsafe_allow_html=True)   
+            components.html(line , width=1000, height=500)
     
 #===============================================================================================
 # Building Cost Report     
 
 if selected == 'Cost Report':
+    #------Set cards style------------------
+    st.markdown("""
+        <style>
+        div[data-testid="metric-container"] {
+        background-color: rgba(28, 131, 225, 0.1);
+        border: 2px solid rgba(28, 131, 225, 0.1);
+        padding: 5% 5% 5% 10%;
+        border-radius: 5px;
+        border-color: #B2182B;
+        color: rgb(30, 103, 119);
+        overflow-wrap: break-word;
+        text-align: center;
+        }
+        
+
+        /* breakline for metric text         */
+        div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
+        overflow-wrap: break-word;
+        white-space: break-spaces;
+        color: #C00000;
+        font-weight: bold;
+        }
+        </style>
+        
+        """
+        , unsafe_allow_html=True)
+    #----------------------------------------
+    # Reading COST DF from google sheet
+    sheet_id = '1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw'
+    sheet_name = 'COST'
+    url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+    # update every 10 mins
+    st_autorefresh(interval=10* 60 * 1000,key=None)
+    @st.experimental_memo(ttl=600)
+    def get_data():
+        df = pd.read_csv(url)
+        return df
+    df = get_data()
+
+
+#===============================================================================================
     st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Cost Report</h1> " ,unsafe_allow_html=True)
     
     #---------------------------------------------------------------------------
