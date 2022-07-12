@@ -12,6 +12,7 @@ from pyecharts.charts import Funnel, Bar, Line,Pie
 
 
 
+
 st.set_page_config(layout='wide'
                 )
 
@@ -51,7 +52,7 @@ if selected == 'Sales Report':
         background-color: #f4f9f2;
         border: 2px solid rgba(28, 131, 225, 0.1);
         padding: 5% 5% 5% 10%;
-        border-radius: 5px;
+        border-radius: 10px;
         border-color: #B45904;
         color: rgb(30, 103, 119);
         overflow-wrap: break-word;
@@ -65,6 +66,7 @@ if selected == 'Sales Report':
         white-space: break-spaces;
         color: #C00000;
         font-weight: bold;
+        font-size:17px
         }
         </style>
         
@@ -115,11 +117,11 @@ if selected == 'Sales Report':
         value = tot_or,
     )
     t4.metric(
-        label = 'Avg Orders Per Month',
+        label = 'Avg Orders/Month',
         value = round(avg_or),
     )
     t5.metric(
-        label = 'Avg Order Value "Egp"',
+        label = 'Avg Order Value',
         value = round(tot_s/tot_or),
     )
         
@@ -195,7 +197,9 @@ if selected == 'Sales Report':
             )
             
             .render_embed()
-)
+            
+        )
+    
     with st.expander('View Visuals'):   
         l1,l2 = st.columns(2)
         with l1:
@@ -204,7 +208,71 @@ if selected == 'Sales Report':
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales During Months </h5> " ,unsafe_allow_html=True)   
             components.html(line , width=1000, height=500)
+    #-------- cash_vs_on_acc_Data----------------------------------  
+    cash_s = df1['CASH'].sum()
+    onacc_s = df1['ON_ACC'].sum()
+    tawa_s = df1['T_AWAY'].sum()
+    del_s = df1['DELIVERY'].sum()
     
+    #------------cash vs on acc ----------------------------
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> (Cash VS On Acc) & (T.away VS On Delivery)</h3> " ,unsafe_allow_html=True)
+    sl1, sl2, sl3, sl4 = st.columns(4)
+    sl1.metric(
+        label='Cash Sales %',
+        value= str(round(cash_s / tot_s,1)*100) + " %"
+    )
+    sl2.metric(
+        label='On Acc Sales %',
+        value= str(round(onacc_s / tot_s,1)*100) + " %"
+    )
+    sl3.metric(
+        label='Take Away Sales %',
+        value= str(round(tawa_s / tot_s,1)*100) + " %"
+    )
+    sl4.metric(
+        label='Delivery Sales %',
+        value= str(round(del_s / tot_s,1)*100) + " %"
+    ) 
+    #------------Pie2_chart_data----------------------------
+    sal_br1 = df1.groupby(['Branch']).sum()[['CASH','ON_ACC']].reset_index()
+    sal_br2 = df1.groupby(['Branch']).sum()[['T_AWAY','DELIVERY']].reset_index()
+    #sal_brn1 = df1['CASH'].unique().tolist()
+    xs1 = ['CASH', 'ON_ACC'] 
+    xs2 = ['T_Away', 'Delivery']  
+    ys1 = sal_br1[['CASH','ON_ACC']].values.tolist()
+    ys2 = sal_br2[['T_AWAY','DELIVERY']].values.tolist()
+    #------------------------------------------------------
+    data_pairs1 = [list(z) for z in zip(xs1, ys1)]
+    data_pairs1.sort(key=lambda x: x[1])
+    pie1 = (
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+    .add("", data_pair=data_pairs1)
+    .set_global_opts(title_opts=opts.TitleOpts(title=""))
+    .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
+        
+    .render_embed()
+    
+    )
+    
+    data_pairs2 = [list(z) for z in zip(xs2, ys2)]
+    data_pairs2.sort(key=lambda x: x[1])
+    pie2 = (
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+    .add("", data_pair=data_pairs2)
+    .set_global_opts(title_opts=opts.TitleOpts(title=""))
+    .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
+        
+    .render_embed()
+    
+    )  
+    with st.expander('View Visuals'):   
+        m1,m2 = st.columns(2) 
+        with m1:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Cash & On Acc Sales</h5> " ,unsafe_allow_html=True)   
+            components.html(pie1 , width=1000, height=500)  
+        with m2:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales</h5> " ,unsafe_allow_html=True)   
+            components.html(pie2, width=1000, height=500)
 #===============================================================================================
 # Building Cost Report     
 
@@ -216,7 +284,7 @@ if selected == 'Cost Report':
         background-color: rgba(28, 131, 225, 0.1);
         border: 2px solid rgba(28, 131, 225, 0.1);
         padding: 5% 5% 5% 10%;
-        border-radius: 5px;
+        border-radius: 10px;
         border-color: #B2182B;
         color: rgb(30, 103, 119);
         overflow-wrap: break-word;
@@ -230,6 +298,7 @@ if selected == 'Cost Report':
         white-space: break-spaces;
         color: #C00000;
         font-weight: bold;
+        font-size:17px;
         }
         </style>
         
