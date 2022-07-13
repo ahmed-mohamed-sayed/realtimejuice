@@ -1,5 +1,6 @@
 
 from ctypes import alignment
+from turtle import width
 from matplotlib.pyplot import legend
 import streamlit as st 
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
@@ -86,18 +87,22 @@ if selected == 'Sales Report':
         return df
     df1 = get_sales_data()
     df2= get_sales_data()
+    df3= get_sales_data()
 #===============================================================================================
     
     st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Sales Report</h1> " ,unsafe_allow_html=True)
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119);'> Select Branch </h3> " ,unsafe_allow_html=True)
     
     #----Multiselect----------------------------------
-    opt = df1["Branch"].unique().tolist()
-    opt.insert(0,'ALL')
-    branch = st.multiselect("Branch",opt, default='ALL')
-    if "ALL" in branch:
-        branch = opt  
-   
-    df1 = df1.query( 'Branch == @branch  ')
+    choose=st.radio("",("All","Zayed","Sheraton","Tagamoa"))
+    if choose == 'Zayed':
+      df1=  df1.query('Branch == "ZAYED"')
+    if choose == 'Sheraton':
+      df1=  df1.query('Branch == "SHERATON"')
+    if choose == 'Tagamoa':
+      df1=  df1.query('Branch == "TAGAMOA"')
+    st.markdown("""<hr style="height:2px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
     #-------------------------------------------------
     #Total Sales KPI's--------------------------------
     tot_s = df1['TOTAL'].sum()
@@ -169,13 +174,14 @@ if selected == 'Sales Report':
     lin_sz = lin_s.query('Branch == "ZAYED"')[['TOTAL']]
     lin_ssh = lin_s.query('Branch == "SHERATON"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
     lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
-    
+    colors = ["#5793f3", "#d14a61", "#675bba"]
     line = (
             Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_s['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
                  y_axis=lin_sz['TOTAL'],
+                color=colors[0]
                 
              )
             .add_yaxis(
@@ -214,19 +220,24 @@ if selected == 'Sales Report':
     
     
     #------------set radio buttons for branches  ----------------------------
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+
     st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> (Cash VS On Acc) & (T.away VS On Delivery)</h3> " ,unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; font-weight:bold; color: #C00000;'> Select Branch </h4> " ,unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119);'> Select Branch </h3> " ,unsafe_allow_html=True)
+
 
     st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
     st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#B45904;}</style>', unsafe_allow_html=True)
-
-    choose=st.radio("",("All","Zayed","Sheraton","Tagamoa"))
+   
+    choose=st.radio("",("ALL","Zayed","Sheraton","Tagamoa"))
     if choose == 'Zayed':
       df2=  df2.query('Branch == "ZAYED"')
     if choose == 'Sheraton':
       df2=  df2.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df2=  df2.query('Branch == "TAGAMOA"')
+    st.markdown("""<hr style="height:1px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+
     #-------- cash_vs_on_acc_Data----------------------------------  
     cash_s = df2['CASH'].sum()
     onacc_s = df2['ON_ACC'].sum()
@@ -346,6 +357,45 @@ if selected == 'Sales Report':
         with m4:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales During Months</h5> " ,unsafe_allow_html=True)   
             components.html(line2, width=1000, height=500)
+    #------------set radio buttons for Dayweek  ----------------------------
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Sales By Day of Week (Total, T.Away & Delivery)</h3> " ,unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119);'> Select Branch </h3> " ,unsafe_allow_html=True)
+
+
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#B45904;}</style>', unsafe_allow_html=True)
+   
+    choose=st.radio(".",("ALL","Zayed","Sheraton","Tagamoa"))
+    if choose == 'Zayed':
+      df3=  df3.query('Branch == "ZAYED"')
+    if choose == 'Sheraton':
+      df3=  df3.query('Branch == "SHERATON"')
+    if choose == 'Tagamoa':
+      df3=  df3.query('Branch == "TAGAMOA"')
+    st.markdown("""<hr style="height:1px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    
+    #------------Weekday Data & Visual----------------------------
+    day = df3['DAY'].unique().tolist()
+    tot_day = df3['TOTAL'].values.tolist()
+    tawy_day = df3['T_AWAY'].values.tolist()
+    del_day = df3['DELIVERY'].values.tolist()
+    bar2 = (
+    Bar(init_opts=opts.InitOpts( width="1000px", height="400px",bg_color="#f0f0f0"))
+        .add_xaxis(day)
+        .add_yaxis("Total", tot_day)
+        .add_yaxis("T_Away", tawy_day)
+        .add_yaxis("Delivery", del_day)
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title=""),
+            datazoom_opts=opts.DataZoomOpts(type_="inside"),
+        )
+        .render_embed()
+)   
+    st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
+
+    components.html(bar2, width=1400, height=700)
 #===============================================================================================
 # Building Cost Report     
 
