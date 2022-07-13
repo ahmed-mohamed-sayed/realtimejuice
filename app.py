@@ -105,6 +105,8 @@ if selected == 'Sales Report':
       df1=  df1.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df1=  df1.query('Branch == "TAGAMOA"')
+    st.markdown("")
+    st.markdown("")
     #-------------------------------------------------
     #Total Sales KPI's--------------------------------
     tot_s = df1['TOTAL'].sum()
@@ -235,7 +237,8 @@ if selected == 'Sales Report':
       df2=  df2.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df2=  df2.query('Branch == "TAGAMOA"')
-
+    st.markdown("")
+    st.markdown("")
     #-------- cash_vs_on_acc_Data----------------------------------  
     cash_s = df2['CASH'].sum()
     onacc_s = df2['ON_ACC'].sum()
@@ -370,14 +373,15 @@ if selected == 'Sales Report':
       df3=  df3.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df3=  df3.query('Branch == "TAGAMOA"')
-    
+    st.markdown("")
+    st.markdown("")
     #------------Weekday Data & Visual----------------------------
     day = df3['DAY'].unique().tolist()
     tot_day = df3['TOTAL'].values.tolist()
     tawy_day = df3['T_AWAY'].values.tolist()
     del_day = df3['DELIVERY'].values.tolist()
     bar2 = (
-    Bar(init_opts=opts.InitOpts( width="1300px", height="800px",bg_color="#f0f0f0"))
+    Bar(init_opts=opts.InitOpts( width="1355px", height="550px",bg_color="#f0f0f0"))
         .add_xaxis(day)
         .add_yaxis("Total", tot_day)
         .add_yaxis("T_Away", tawy_day)
@@ -390,7 +394,7 @@ if selected == 'Sales Report':
 )   
     #st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
 
-    components.html(bar2, width=1000, height=500)
+    components.html(bar2, width=1800, height=550)
 #===============================================================================================
 # Building Cost Report     
 
