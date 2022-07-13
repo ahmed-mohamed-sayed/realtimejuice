@@ -87,11 +87,16 @@ if selected == 'Sales Report':
     df2= get_sales_data()
     df3= get_sales_data()
 #===============================================================================================
-    
+    #main title
     st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Sales Report</h1> " ,unsafe_allow_html=True)
+    #bold line separator
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119);'> Select Branch </h3> " ,unsafe_allow_html=True)
-    
+    # title
+    st.markdown("<h2 style='text-align: center; font-weight:bold; color: #354968;'> General Sales Insights</h2> " ,unsafe_allow_html=True)    
+
+    # Radio Buttons style
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;border:2px solid #C00000;border-radius:10px} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#B45904;}</style>', unsafe_allow_html=True)
     #----Multiselect----------------------------------
     choose=st.radio("",("All","Zayed","Sheraton","Tagamoa"))
     if choose == 'Zayed':
@@ -100,7 +105,6 @@ if selected == 'Sales Report':
       df1=  df1.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df1=  df1.query('Branch == "TAGAMOA"')
-    st.markdown("""<hr style="height:2px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
     #-------------------------------------------------
     #Total Sales KPI's--------------------------------
     tot_s = df1['TOTAL'].sum()
@@ -218,14 +222,11 @@ if selected == 'Sales Report':
     
     
     #------------set radio buttons for branches  ----------------------------
+    #Bold Line separatoer
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
-
+    #Title
     st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> (Cash VS On Acc) & (T.away VS On Delivery)</h3> " ,unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119);'> Select Branch </h3> " ,unsafe_allow_html=True)
-
-
-    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
-    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#B45904;}</style>', unsafe_allow_html=True)
+    
    
     choose=st.radio("",("ALL","Zayed","Sheraton","Tagamoa"))
     if choose == 'Zayed':
@@ -234,7 +235,6 @@ if selected == 'Sales Report':
       df2=  df2.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df2=  df2.query('Branch == "TAGAMOA"')
-    st.markdown("""<hr style="height:1px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
 
     #-------- cash_vs_on_acc_Data----------------------------------  
     cash_s = df2['CASH'].sum()
@@ -356,14 +356,12 @@ if selected == 'Sales Report':
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales During Months</h5> " ,unsafe_allow_html=True)   
             components.html(line2, width=1000, height=500)
     #------------set radio buttons for Dayweek  ----------------------------
+    #bold line separator
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
-
+    #title
     st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Sales By Day of Week (Total, T.Away & Delivery)</h3> " ,unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119);'> Select Branch </h3> " ,unsafe_allow_html=True)
 
 
-    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;} </style>', unsafe_allow_html=True)
-    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#B45904;}</style>', unsafe_allow_html=True)
    
     choose=st.radio(".",("ALL","Zayed","Sheraton","Tagamoa"))
     if choose == 'Zayed':
@@ -372,7 +370,6 @@ if selected == 'Sales Report':
       df3=  df3.query('Branch == "SHERATON"')
     if choose == 'Tagamoa':
       df3=  df3.query('Branch == "TAGAMOA"')
-    st.markdown("""<hr style="height:1px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
     
     #------------Weekday Data & Visual----------------------------
     day = df3['DAY'].unique().tolist()
@@ -380,7 +377,7 @@ if selected == 'Sales Report':
     tawy_day = df3['T_AWAY'].values.tolist()
     del_day = df3['DELIVERY'].values.tolist()
     bar2 = (
-    Bar(init_opts=opts.InitOpts( width="1000px", height="400px",bg_color="#f0f0f0"))
+    Bar(init_opts=opts.InitOpts( width="1300px", height="800px",bg_color="#f0f0f0"))
         .add_xaxis(day)
         .add_yaxis("Total", tot_day)
         .add_yaxis("T_Away", tawy_day)
@@ -391,9 +388,9 @@ if selected == 'Sales Report':
         )
         .render_embed()
 )   
-    st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
+    #st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
 
-    components.html(bar2, width=1400, height=700)
+    components.html(bar2, width=1000, height=500)
 #===============================================================================================
 # Building Cost Report     
 
