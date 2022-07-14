@@ -12,7 +12,7 @@ from pyecharts.charts import Funnel, Bar, Line,Pie
 
 
 
-
+# set app layout 
 st.set_page_config(layout='wide'
                 )
 st.markdown(""" <style>
@@ -27,7 +27,7 @@ st.markdown(f""" <style>
         padding-left: {padding}rem;
         padding-bottom: {padding}rem;
     }} </style> """, unsafe_allow_html=True)
-        
+
 #===============================================================================================
 
 # Set Navigation Menu
@@ -60,11 +60,11 @@ if selected == 'Sales Report':
     st.markdown("""
         <style>
         div[data-testid="metric-container"] {
-        background-color: #f4f9f2;
+        background-color: rgba(28, 131, 225, 0.1);
         border: 2px solid rgba(28, 131, 225, 0.1);
         padding: 5% 5% 5% 10%;
         border-radius: 10px;
-        border-color: #B45904;
+        border-color: #B2182B;
         color: rgb(30, 103, 119);
         overflow-wrap: break-word;
         text-align: center;
@@ -77,7 +77,7 @@ if selected == 'Sales Report':
         white-space: break-spaces;
         color: #C00000;
         font-weight: bold;
-        font-size:17px
+        font-size:17px;
         }
         </style>
         
@@ -414,7 +414,7 @@ if selected == 'Cost Report':
     st.markdown("""
         <style>
         div[data-testid="metric-container"] {
-        background-color: rgba(28, 131, 225, 0.1);
+        background-color: #FFEBF1;
         border: 2px solid rgba(28, 131, 225, 0.1);
         padding: 5% 5% 5% 10%;
         border-radius: 10px;
@@ -445,40 +445,45 @@ if selected == 'Cost Report':
     # update every 10 mins
     st_autorefresh(interval=10* 60 * 1000,key=None)
     @st.experimental_memo(ttl=600)
-    def get_data():
+    def get_cost_data():
         df = pd.read_csv(url)
         return df
-    df = get_data()
+    df4 = get_cost_data()
+    df5= get_cost_data()
+    df6= get_cost_data()
 
 
 #===============================================================================================
     st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Cost Report</h1> " ,unsafe_allow_html=True)
     
     #---------------------------------------------------------------------------
-    #Create Columns
-    # col1, col2, col3, col4, col5 = st.columns(5)
-    # with col1:
-    opt1 = df["Branch"].unique().tolist()
-    opt1.insert(0,'ALL')
-    branch = st.multiselect("Branch",opt1, default='ALL')
-    if "ALL" in branch:
-        branch = opt1   
-    df = df.query( 'Branch == @branch  ')
-    
-    # with col4:
-    #     start = st.selectbox("Start Month",df["MONTH"].unique())
-    # df = df[df["MONTH"] >= start]
-    # with col5:
-    #     end = st.selectbox("End Month",df["MONTH"].unique())
-    # df = df[df["MONTH"] <= end]
+    #bold line separator
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    # title
+    st.markdown("<h2 style='text-align: center; font-weight:bold; color: #354968;'> General Cost Insights</h2> " ,unsafe_allow_html=True)    
+
+    # Radio Buttons style
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;border:2px solid #C00000;border-radius:10px} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#C00000;}</style>', unsafe_allow_html=True)
+    #----Multiselect----------------------------------
+    choose=st.radio("",("All","Zayed","Sheraton","Tagamoa"))
+    if choose == 'Zayed':
+      df4=  df4.query('Branch == "ZAYED"')
+    if choose == 'Sheraton':
+      df4=  df4.query('Branch == "SHERATON"')
+    if choose == 'Tagamoa':
+      df4=  df4.query('Branch == "TAGAMOA"')
+    st.markdown("")
+    st.markdown("")
+    #-------------------------------------------------
     #---------------------------------------------------------------------------
     #Create KPI's & Graph
-    tot = df['AMOUNT'].sum() 
-    avg = df['AMOUNT'].sum() / len(df['MONTH'].unique())
-    typ_dis = df.groupby(['ExpType']).sum()[['AMOUNT']].reset_index()
-    ad_typ = df.query('ExpType == "ADMIN"')['AMOUNT'].sum()
-    cog_typ = df.query('ExpType == "COGS"')['AMOUNT'].sum()
-    adv_typ = df.query('ExpType == "ADVERTISING"')['AMOUNT'].sum()
+    tot = df4['AMOUNT'].sum() 
+    avg = df4['AMOUNT'].sum() / len(df4['MONTH'].unique())
+    typ_dis = df4.groupby(['ExpType']).sum()[['AMOUNT']].reset_index()
+    ad_typ = df4.query('ExpType == "ADMIN"')['AMOUNT'].sum()
+    cog_typ = df4.query('ExpType == "COGS"')['AMOUNT'].sum()
+    adv_typ = df4.query('ExpType == "ADVERTISING"')['AMOUNT'].sum()
     
     
     
@@ -505,10 +510,10 @@ if selected == 'Cost Report':
     )
     #------------------------------------------------------ 
     #-------- Branch_Data---------------------------------- 
-    total_br = df['AMOUNT'].sum()  
-    zayed_c = df.query('Branch == "ZAYED"')['AMOUNT'].sum()
-    sharton_c = df.query('Branch == "SHERATON"')['AMOUNT'].sum()
-    tagam_c = df.query('Branch == "TAGAMOA"')['AMOUNT'].sum()
+    total_br = df4['AMOUNT'].sum()  
+    zayed_c = df4.query('Branch == "ZAYED"')['AMOUNT'].sum()
+    sharton_c = df4.query('Branch == "SHERATON"')['AMOUNT'].sum()
+    tagam_c = df4.query('Branch == "TAGAMOA"')['AMOUNT'].sum()
     
     #------------Pie1_chart----------------------------
     st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Cost Distribution By Branch </h3> " ,unsafe_allow_html=True)    
@@ -526,7 +531,7 @@ if selected == 'Cost Report':
         value = str(round(tagam_c/total_br, 2)*100) + " %",
     )
     #------------Pie1_chart_data----------------------------
-    data_br = df.groupby(['Branch']).sum()[['AMOUNT']].reset_index()
+    data_br = df4.groupby(['Branch']).sum()[['AMOUNT']].reset_index()
     data_brn = data_br['Branch'].unique().tolist()
     xd = data_brn   
     yd = data_br['AMOUNT'].values.tolist()
@@ -543,7 +548,7 @@ if selected == 'Cost Report':
     
     )
     #------------Line_chart_data----------------------------
-    lin_dat = df.groupby(['Branch','MONTH']).sum()[['AMOUNT']].reset_index()
+    lin_dat = df4.groupby(['Branch','MONTH']).sum()[['AMOUNT']].reset_index()
     lin_za = lin_dat.query('Branch == "ZAYED"')[['AMOUNT']]
     lin_sh = lin_dat.query('Branch == "SHERATON"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
@@ -586,25 +591,48 @@ if selected == 'Cost Report':
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost During Months </h5> " ,unsafe_allow_html=True)   
             components.html(line , width=1000, height=500)
-    #-------bar1 Chart Data---------------------------------
-    cost_br = pd.pivot_table( df,columns=['ExpType'] ,index= ['Branch'] ,values='AMOUNT',aggfunc= 'sum').reset_index()
-    admin_br =cost_br['ADMIN'].sum() 
+    
     #------------------------------------------------------
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #980036;'> Cost Distribution By Cost Type </h3> " ,unsafe_allow_html=True)    
+    #bold line separator
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    #title
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Cost Distribution By Cost Type </h3> " ,unsafe_allow_html=True) 
+    # Radio Buttons style
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;border:2px solid #C00000;border-radius:10px} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#C00000;}</style>', unsafe_allow_html=True)
+    #----Multiselect----------------------------------
+    choose=st.radio("",("ALL","Zayed","Sheraton","Tagamoa"))
+    if choose == 'Zayed':
+      df5=  df5.query('Branch == "ZAYED"')
+    if choose == 'Sheraton':
+      df5=  df5.query('Branch == "SHERATON"')
+    if choose == 'Tagamoa':
+      df5=  df5.query('Branch == "TAGAMOA"')
+    st.markdown("")
+    st.markdown("")
+    #------------------------------------------------- 
+      #Create KPI's & Graph
+    tot1 = df5['AMOUNT'].sum() 
+    ad_typ1 = df5.query('ExpType == "ADMIN"')['AMOUNT'].sum()
+    cog_typ1 = df5.query('ExpType == "COGS"')['AMOUNT'].sum()
+    adv_typ1 = df5.query('ExpType == "ADVERTISING"')['AMOUNT'].sum()
+    #--------------------------------------------------  
     kpi6, kpi7, kpi8= st.columns(3)
     kpi6.metric(
         label = 'Admin Cost %',
-        value = str(round(ad_typ/tot, 1)*100) + " %",
+        value = str(round(ad_typ1/tot1,2)*100) + " %",
     )
     kpi7.metric(
         label = 'COGS %',
-        value = str(round(cog_typ/tot, 2)*100) + " %",
+        value = str(round(cog_typ1/tot1, 2)*100) + " %",
     )
     kpi8.metric(
         label = 'Advertising %',
-        value = str(round(adv_typ/tot, 2)*100) + " %",
+        value = str(round(adv_typ1/tot1, 2)*100) + " %",
     )
-    
+    #-------bar1 Chart Data---------------------------------
+    cost_br = pd.pivot_table( df5,columns=['ExpType'] ,index= ['Branch'] ,values='AMOUNT',aggfunc= 'sum').reset_index()
+    admin_br =cost_br['ADMIN'].sum() 
     
     bar1 = (
             Bar(init_opts=opts.InitOpts(width="650px", height="500px", bg_color="#f0f0f0"))
@@ -625,7 +653,7 @@ if selected == 'Cost Report':
         )
     #-------Line1 Chart Data---------------------------------
 
-    x = df.groupby(['ExpType','MONTH']).sum()[['AMOUNT']].reset_index()
+    x = df5.groupby(['ExpType','MONTH']).sum()[['AMOUNT']].reset_index()
     admin = x.query('ExpType == "ADMIN"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     cogs = x.query('ExpType == "COGS"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     adver = x.query('ExpType == "ADVERTISING"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
@@ -671,45 +699,33 @@ if selected == 'Cost Report':
     
 
     #------------------------------------------------------
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: rgb(30, 103, 119)   ;'> Expenses Analysis </h3> " ,unsafe_allow_html=True)    
-
-    #-------Fun1 Chart Data---------------------------------
-    # exp_nm = df.groupby(['ExpName','ExpType']).sum()[['AMOUNT']].sort_values(by='AMOUNT',ascending=False).reset_index()
-    # exp_nm= exp_nm[exp_nm['ExpType']== 'ADMIN']
-    # x_data = exp_nm['ExpName'].unique().tolist()   
-    # y_data = exp_nm['AMOUNT'].values.tolist()
-    #------------------------------------------------------
-    
-    # data = [[x_data[i], y_data[i]] for i in range(len(x_data))]
-
-    # fun1 = (
-    #         Funnel(init_opts=opts.InitOpts(width="1050px", height="900px",bg_color="#f9f9f9"))
-    #         .add(
-    #             series_name="",
-    #             data_pair=data,
-    #             gap=3,
-    #             tooltip_opts=opts.TooltipOpts(trigger="item", formatter="{a} <br/>{b} : {c}"),
-    #             label_opts=opts.LabelOpts(is_show=True, position="inside"),
-    #             itemstyle_opts=opts.ItemStyleOpts(border_color="#f0f0f0", border_width=1),
-    #         )
-    #         .set_global_opts(title_opts=opts.TitleOpts(title="", subtitle=""),
-    #                          legend_opts=opts.LegendOpts( pos_top="1%"),)
-    #         .render_embed()
-    #     )
- 
-    # components.html(fun1, width=1200, height=1000 )
-    
-    
+    #bold line separator
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    #title
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968   ;'> Expenses Analysis </h3> " ,unsafe_allow_html=True)    
+    # Radio Buttons style
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;border:2px solid #C00000;border-radius:10px} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#C00000;}</style>', unsafe_allow_html=True)
+    #----Multiselect----------------------------------
+    choose=st.radio(".",("ALL","Zayed","Sheraton","Tagamoa"))
+    if choose == 'Zayed':
+      df6=  df6.query('Branch == "ZAYED"')
+    if choose == 'Sheraton':
+      df6=  df6.query('Branch == "SHERATON"')
+    if choose == 'Tagamoa':
+      df6=  df6.query('Branch == "TAGAMOA"')
+    st.markdown("")
+    st.markdown("")
     #----------------Admin_data------------------------------
-    dfs = df[df['ExpType'] == "ADMIN"]
+    dfs = df6[df6['ExpType'] == "ADMIN"]
     admin_d = dfs.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
     admin_d['PCT %'] = round(admin_d['AMOUNT']/ admin_d['AMOUNT'].sum()*100 ,1)
-    admin_d['AVG_Per_Month'] = round(admin_d['AMOUNT']/ len(df['MONTH'].unique()))
+    admin_d['AVG_Per_Month'] = round(admin_d['AMOUNT']/ len(df6['MONTH'].unique()))
     #-------
-    dfd = df[df['ExpType'] == "COGS"]
+    dfd = df6[df6['ExpType'] == "COGS"]
     cogs_d = dfd.groupby(['ExpName']).sum()[['AMOUNT']].reset_index().sort_values(by=['AMOUNT'],ascending=False)
     cogs_d['PCT %'] = round(cogs_d['AMOUNT']/ cogs_d['AMOUNT'].sum()*100,2)
-    cogs_d['AVG_Per_Month'] = round(cogs_d['AMOUNT']/ len(df['MONTH'].unique()))
+    cogs_d['AVG_Per_Month'] = round(cogs_d['AMOUNT']/ len(df6['MONTH'].unique()))
     
     #------------------------------------------------------
     d1,d2 = st.columns(2)
@@ -757,33 +773,163 @@ if selected == 'Cost Report':
         width='100%',
         reload_data=True
     )
-        
-
-
-    
-    
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-    
+ 
 #===============================================================================================
 # Building Profit Report  
 if selected == 'Profit Report':
-    st.markdown("<h2 style='text-align: center; font-weight:bold; color: #C00000;'> Profit Report</h2> " ,unsafe_allow_html=True)
+    #------Set cards style------------------
+    st.markdown("""
+        <style>
+        div[data-testid="metric-container"] {
+        background-color: #f4f9f2;
+        border: 2px solid rgba(28, 131, 225, 0.1);
+        padding: 5% 5% 5% 10%;
+        border-radius: 10px;
+        border-color: #B45904;
+        color: rgb(30, 103, 119);
+        overflow-wrap: break-word;
+        text-align: center;
+        }
+        
+
+        /* breakline for metric text         */
+        div[data-testid="metric-container"] > label[data-testid="stMetricLabel"] > div {
+        overflow-wrap: break-word;
+        white-space: break-spaces;
+        color: #C00000;
+        font-weight: bold;
+        font-size:17px
+        }
+        </style>
+        
+        """
+        , unsafe_allow_html=True)
+    # Reading COST DF from google sheet
+    sheet_id = '1BNvKxtMtoxzw22HIfxezPw9UkoRCQibKkAB5xTgpvWw'
+    sheet_name_C = 'COST'
+    sheet_name_S = 'SALES'
+    url_C = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name_C}'
+    url_S = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name_S}'
+    # update every 10 mins
+    st_autorefresh(interval=10* 60 * 1000,key=None)
+    @st.experimental_memo(ttl=600)
+    def get_pft_data():
+        df_C = pd.read_csv(url_C)
+        cost = df_C.groupby(['Branch','MONTH']).sum()[['AMOUNT']].reset_index()
+        cost = cost.rename(columns={'MONTH':'MONTH_C', 'Branch':'Branch_C'})
+        df_S = pd.read_csv(url_S)
+        sales = df_S.groupby(['Branch','MONTH']).sum()[['TOTAL']].reset_index()
+        sales = sales.rename(columns={'MONTH':'MONTH_S', 'Branch':'Branch_S'})
+        df = pd.concat([cost, sales], axis=1).reset_index()
+        df.drop(['Branch_C','MONTH_C'],axis=1, inplace=True)
+        df['Profit'] = df['TOTAL'] - df['AMOUNT']
+        return df
+    df_pf = get_pft_data()
+    #----------------------------------------
+    #main title
+    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Profit Report</h1> " ,unsafe_allow_html=True)
+    #bold line separator
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    # title
+    st.markdown("<h2 style='text-align: center; font-weight:bold; color: #354968;'> General Profit Insights</h2> " ,unsafe_allow_html=True)
+    # Radio Buttons style
+    st.write('<style>div.row-widget.stRadio > div{flex-direction:row;justify-content: center;border:2px solid #C00000;border-radius:10px} </style>', unsafe_allow_html=True)
+    st.write('<style>div.st-bf{flex-direction:column;} div.st-ag{font-weight:bold;padding-left:2px;font-size:19px;color:#28965A;}</style>', unsafe_allow_html=True)
+    #----set radio buttons----------------------------------
+    choose=st.radio("",("All","Zayed","Sheraton","Tagamoa"))
+    if choose == 'Zayed':
+      df_pf=  df_pf.query('Branch_S == "ZAYED"')
+      
+      
+    if choose == 'Sheraton':
+      df_pf=  df_pf.query('Branch_S == "SHERATON"')
+      
+    if choose == 'Tagamoa':
+      df_pf=  df_pf.query('Branch_S == "TAGAMOA"')
+      
+    st.markdown("")
+    st.markdown("")
+    #-------------------------------------------------
+    #Profit KPI's--------------------------------
+    tot_pf = df_pf['Profit'].sum()
+    avg_p = tot_pf / len(df_pf['MONTH_S'].unique())
+    c_to_pf = df_pf['AMOUNT'].sum() / tot_pf
+    c_to_p_measure = round(1000 * c_to_pf)
+    #-------------------------------
+    pf1, pf2, pf3 = st.columns(3)
+    pf1.metric(
+        label='Total Profit',
+        value= str(round(tot_pf/ 1e3,2)) + " K"
+    )
+    pf2.metric(
+        label='Avg Profit/Month',
+        value= str(round(avg_p/ 1e3,2)) + " K"
+    )
+    pf3.metric(
+        label='Cost To Profit %',
+        value= str(round(c_to_pf,2)) + " %"
+    )
+    #-------- Profit_Branch_Data---------------------------------- 
+    zayed_pf = df_pf.query('Branch_S == "ZAYED"')['Profit'].sum()
+    sheraton_pf = df_pf.query('Branch_S == "SHERATON"')['Profit'].sum()
+    tagamoa_pf = df_pf.query('Branch_S == "TAGAMOA"')['Profit'].sum()
+    #------------Profit cards----------------------------
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Profit Distribution By Branch </h3> " ,unsafe_allow_html=True)    
+    pf1, pf2, pf3= st.columns(3)
+    pf1.metric(
+        label = 'Zayed Profit %',
+        value = str(round(zayed_pf/tot_pf, 4 )*100) + " %",
+    )
+    pf2.metric(
+        label = 'Sheraton Profit %',
+        value = str(round(sheraton_pf/tot_pf, 4)*100) + " %",
+    )
+    pf3.metric(
+        label = 'Tagamoa Profit %',
+        value = str(round(tagamoa_pf/tot_pf, 4)*100) + " %",
+    )
+    #------------Pie1_chart_data----------------------------
+    pie_dat = df_pf.groupby(['Branch_S']).sum()[['Profit']].reset_index()
+    x = pie_dat['Branch_S'].unique().tolist() 
+    y = pie_dat['Profit'].values.tolist()
+    
+    #------------------------------------------------------
+    data_pair = [list(z) for z in zip(x, y)]
+    data_pair.sort(key=lambda x: x[1])
+    pie1 = (
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+    .add("", data_pair=data_pair)
+    .set_global_opts(title_opts=opts.TitleOpts(title=""))
+    .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
+        
+    .render_embed()
+    
+    )
+    #------------Line_chart_data----------------------------
+    lin_dat = df_pf.groupby(['Branch_S','MONTH_S']).sum()[['Profit']].reset_index()
+    lin_za = lin_dat.query('Branch_S == "ZAYED"')[['Profit']]
+    lin_sh = lin_dat.query('Branch_S == "SHERATON"')[['MONTH_S','Profit']].sort_values(by=['MONTH_S'])
+    lin_tag = lin_dat.query('Branch_S == "TAGAMOA"')[['MONTH_S','Profit']].sort_values(by=['MONTH_S'])
+    line = (
+            Bar(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            .add_xaxis(lin_dat['MONTH_S'].unique().tolist())
+            .add_yaxis("Zayed", lin_za['Profit'].values.tolist())
+            .add_yaxis("Shheraton", lin_sh['Profit'].values.tolist())
+            .add_yaxis("Tagamoa", lin_tag['Profit'].values.tolist())
+            .set_global_opts(
+            toolbox_opts=opts.ToolboxOpts(is_show=True),
+            title_opts=opts.TitleOpts(title=""),
+            datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")],
+        )
+            .render_embed()
+    )
+            
+    with st.expander('View Visuals'):   
+        l1,l2 = st.columns(2)
+        with l1:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Profit By Branch </h5> " ,unsafe_allow_html=True)
+            components.html(pie1 , width=1000, height=500)
+        with l2:
+            st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Profit During Months </h5> " ,unsafe_allow_html=True)
+            components.html(line , width=1000, height=500)
+    
