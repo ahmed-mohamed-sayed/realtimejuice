@@ -33,7 +33,7 @@ st.markdown(f""" <style>
 def local_style(file_name):
         with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
-local_style(".streamlit/config.toml")
+local_style("config.toml")
 
 
 #===============================================================================================
