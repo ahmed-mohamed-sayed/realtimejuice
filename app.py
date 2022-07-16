@@ -7,7 +7,10 @@ from streamlit_option_menu import option_menu
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 from pyecharts import options as opts
-from pyecharts.charts import Funnel, Bar, Line,Pie
+from pyecharts.charts import Bar, Line,Pie
+from streamlit_lottie import st_lottie
+import json
+
 
 
 
@@ -28,6 +31,8 @@ st.markdown(f""" <style>
         padding-bottom: {padding}rem;
     }} </style> """, unsafe_allow_html=True)
 
+
+
 #===============================================================================================
 
 # Set Navigation Menu
@@ -35,8 +40,8 @@ st.markdown(f""" <style>
 with st.sidebar:
     selected = option_menu(
         menu_title = 'Report Navigation',
-        options = ['Sales Report', 'Cost Report' , 'Profit Report'],
-        icons=['bar-chart','coin','currency-pound'],
+        options = ['Home','Sales Report', 'Cost Report' , 'Profit Report'],
+        icons=['house','bar-chart','coin','currency-pound'],
         menu_icon='cast',
         default_index = 0,
         styles={
@@ -51,6 +56,98 @@ with st.sidebar:
                 "nav-link-selected": {"background-color": '#C00000'},
             },
         )
+#===============================================================================================
+# Building Home
+if selected == 'Home':
+    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #B45904;'> Real-time Report (Sales - Cost - Profit)</h1> " ,unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Milk Shake & Juice Shop</h3> " ,unsafe_allow_html=True)
+    #bold line separator:
+    st.markdown("""<hr style="height:2x;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; font-weight:bold; color: #5c4033;'> This report gets data from Google Sheets with auto-update & auto-refresh time of 10 min. Although this report is responsive. But it's preferable to open from a laptop/desktop because the library that is used for visualization is not responsive. but it gives awesome and interactive visualizations.  </h4> " ,unsafe_allow_html=True)
+    
+    #function to read animation from json file 
+    def load_lottiefile(filepath: str):
+        with open (filepath,"r") as f:
+            return json.load(f)
+        
+    lottie_coding = load_lottiefile('dashboard.json')
+    st_lottie(
+        lottie_coding,
+        speed=1,
+        height= 800
+       
+    )
+    #bold line separator:
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    #lottie files
+    lt1, lt2, lt3 = st.columns(3)
+    lottie_coding1 = load_lottiefile('sales.json')
+    lottie_coding2 = load_lottiefile('cost.json')
+    lottie_coding3 = load_lottiefile('profit.json')
+    with lt1:    
+        
+        st_lottie(
+            lottie_coding1,
+            speed=1,
+            height = 200,  
+        )
+        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Sales Report Metrics</h3> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Total Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Sales Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - No. Of Orders (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Order Value (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average No. Of Orders Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cash Sales VS On Acc Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Take Away VS Delivery Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Sales By Day Of Week (All or By Branch)</h6> " ,unsafe_allow_html=True)
+
+
+
+
+
+
+    with lt2:    
+        st_lottie(
+            lottie_coding2,
+            speed=1,
+            height = 200,  
+        )
+        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Cost Report Metrics</h3> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Total Cost (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Cost Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cost Distribution By Cost Type: Admin, Cogs & Advertising    (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cost Analysis for Admin, Cogs  (All or By Branch)</h6> " ,unsafe_allow_html=True)
+
+    with lt3:    
+        st_lottie(
+            lottie_coding3,
+            speed=1,
+            height = 200,  
+        )
+        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Profit Report Metrics</h3> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Net Profit (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Profit Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cost to Profit Ratio%(All or By Branch)</h6> " ,unsafe_allow_html=True)
+    #bold line separator:
+    st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
+    #Contact Form
+    st.header(":mailbox: Get In Touch With Me!")
+    contact_form = ('''<form action="https://formsubmit.co/ahmed.sayed.ams@gmail.com" method="POST">
+     <input type="hidden" name="_captcha" value="false">
+     <input type="text" name="name" placeholder = "Your Name" required>
+     <input type="email" name="email" placeholder = "Your Email"  required>
+     <textarea name="message" placeholder="Your Message Here"></textarea>
+     <button type="submit">Send</button>
+    </form>''')    
+    st.markdown(contact_form,unsafe_allow_html=True)
+    
+    #Use local css file
+    def local_css(file_name):
+        with open(file_name) as f:
+            st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
+    local_css("style/style.css")
+    #Use local style file
+    
     
 #===============================================================================================
 # Building Sales Report   
@@ -818,13 +915,14 @@ if selected == 'Profit Report':
         cost = df_C.groupby(['Branch','MONTH']).sum()[['AMOUNT']].reset_index()
         cost = cost.rename(columns={'MONTH':'MONTH_C', 'Branch':'Branch_C'})
         df_S = pd.read_csv(url_S)
-        sales = df_S.groupby(['Branch','MONTH']).sum()[['TOTAL']].reset_index()
+        sales = df_S.groupby(['Branch','MONTH','MONTH_NAME']).sum()[['TOTAL']].reset_index()
         sales = sales.rename(columns={'MONTH':'MONTH_S', 'Branch':'Branch_S'})
         df = pd.concat([cost, sales], axis=1).reset_index()
         df.drop(['Branch_C','MONTH_C'],axis=1, inplace=True)
         df['Profit'] = df['TOTAL'] - df['AMOUNT']
         return df
     df_pf = get_pft_data()
+    df_pf1 = get_pft_data()
     #----------------------------------------
     #main title
     st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Profit Report</h1> " ,unsafe_allow_html=True)
@@ -932,4 +1030,6 @@ if selected == 'Profit Report':
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Profit During Months </h5> " ,unsafe_allow_html=True)
             components.html(line , width=1000, height=500)
+    
+    #------------------------------------------------------
     
