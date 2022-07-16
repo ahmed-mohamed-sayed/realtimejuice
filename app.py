@@ -33,7 +33,7 @@ st.markdown(f""" <style>
 def local_style(file_name):
         with open(file_name) as f:
             st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
-local_style("config.toml")
+local_style(".streamlit/config.toml")
 
 
 #===============================================================================================
@@ -62,11 +62,10 @@ with st.sidebar:
 #===============================================================================================
 # Building Home
 if selected == 'Home':
-    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #B45904;'> Real-time Report (Sales - Cost - Profit)</h1> " ,unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #F17E36;'> Real-time Report (Sales - Cost - Profit)</h1> " ,unsafe_allow_html=True)
     st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Milk Shake & Juice Shop</h3> " ,unsafe_allow_html=True)
     #bold line separator:
     st.markdown("""<hr style="height:2x;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: center; font-weight:bold; color: #5c4033;'> This report gets data from Google Sheets with auto-update & auto-refresh time of 10 min. Although this report is responsive. But it's preferable to open from a laptop/desktop because the library that is used for visualization is not responsive. but it gives awesome and interactive visualizations.  </h4> " ,unsafe_allow_html=True)
     
     #function to read animation from json file 
     def load_lottiefile(filepath: str):
@@ -80,6 +79,8 @@ if selected == 'Home':
         height= 800
        
     )
+    st.markdown("<h4 style='text-align: center; font-weight:bold; color: #5c4033;'> This report gets data from Google Sheets with auto-update & auto-refresh time of 10 min. Although this report is responsive. But it's preferable to open from a laptop/desktop because the library that is used for visualization is not responsive. but it gives awesome and interactive visualizations.  </h4> " ,unsafe_allow_html=True)
+
     #bold line separator:
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
     #lottie files
