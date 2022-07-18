@@ -290,14 +290,14 @@ if selected == 'Sales Report':
     lin_sz = lin_s.query('Branch == "ZAYED"')[['TOTAL']]
     lin_ssh = lin_s.query('Branch == "SHERATON"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
     lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
-    colors = ["#5793f3", "#d14a61", "#675bba"]
+    #colors = ["#5793f3", "#d14a61", "#675bba"]
     line = (
             Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_s['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
                  y_axis=lin_sz['TOTAL'],
-                color=colors[0]
+                #color=colors[0]
                 
              )
             .add_yaxis(
@@ -414,7 +414,7 @@ if selected == 'Sales Report':
     lin_tk_dv = df2.groupby(['MONTH']).sum()[['T_AWAY','DELIVERY']].reset_index()
     
     line1 = (
-            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_ca_on['MONTH'])
             .add_yaxis(
                  series_name="ON_ACC",
@@ -493,7 +493,7 @@ if selected == 'Sales Report':
     tawy_day = df3['T_AWAY'].values.tolist()
     del_day = df3['DELIVERY'].values.tolist()
     bar2 = (
-    Bar(init_opts=opts.InitOpts( width="1155px", height="550px",bg_color="#f0f0f0"))
+    Bar(init_opts=opts.InitOpts( width="1050px", height="550px",bg_color="#f0f0f0"))
         .add_xaxis(day)
         .add_yaxis("Total", tot_day)
         .add_yaxis("T_Away", tawy_day)
@@ -506,7 +506,7 @@ if selected == 'Sales Report':
 )   
     #st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
 
-    components.html(bar2, width=1600, height=550)
+    components.html(bar2, width=1500, height=550)
 #===============================================================================================
 # Building Cost Report     
 
