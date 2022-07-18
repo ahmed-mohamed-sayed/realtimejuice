@@ -400,7 +400,7 @@ if selected == 'Sales Report':
     data_pairs2 = [list(z) for z in zip(xs2, ys2)]
     data_pairs2.sort(key=lambda x: x[1])
     pie2 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs2)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -493,7 +493,7 @@ if selected == 'Sales Report':
     tawy_day = df3['T_AWAY'].values.tolist()
     del_day = df3['DELIVERY'].values.tolist()
     bar2 = (
-    Bar(init_opts=opts.InitOpts( width="1355px", height="550px",bg_color="#f0f0f0"))
+    Bar(init_opts=opts.InitOpts( width="1155px", height="550px",bg_color="#f0f0f0"))
         .add_xaxis(day)
         .add_yaxis("Total", tot_day)
         .add_yaxis("T_Away", tawy_day)
@@ -506,7 +506,7 @@ if selected == 'Sales Report':
 )   
     #st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
 
-    components.html(bar2, width=1800, height=550)
+    components.html(bar2, width=1600, height=550)
 #===============================================================================================
 # Building Cost Report     
 
