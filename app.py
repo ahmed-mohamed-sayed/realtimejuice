@@ -277,7 +277,7 @@ if selected == 'Sales Report':
     data_pairs = [list(z) for z in zip(xs, ys)]
     data_pairs.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -292,7 +292,7 @@ if selected == 'Sales Report':
     lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
     colors = ["#5793f3", "#d14a61", "#675bba"]
     line = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_s['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -388,7 +388,7 @@ if selected == 'Sales Report':
     data_pairs1 = [list(z) for z in zip(xs1, ys1)]
     data_pairs1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -414,7 +414,7 @@ if selected == 'Sales Report':
     lin_tk_dv = df2.groupby(['MONTH']).sum()[['T_AWAY','DELIVERY']].reset_index()
     
     line1 = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_ca_on['MONTH'])
             .add_yaxis(
                  series_name="ON_ACC",
@@ -435,7 +435,7 @@ if selected == 'Sales Report':
             .render_embed()
         )
     line2 = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_tk_dv['MONTH'])
             .add_yaxis(
                  series_name="Delivery",
@@ -640,7 +640,7 @@ if selected == 'Cost Report':
     data_pair1 = [list(z) for z in zip(xd, yd)]
     data_pair1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -655,7 +655,7 @@ if selected == 'Cost Report':
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     
     line = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_dat['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -736,7 +736,7 @@ if selected == 'Cost Report':
     admin_br =cost_br['ADMIN'].sum() 
     
     bar1 = (
-            Bar(init_opts=opts.InitOpts(width="650px", height="500px", bg_color="#f0f0f0"))
+            Bar(init_opts=opts.InitOpts(width="450px", height="500px", bg_color="#f0f0f0"))
             .add_xaxis(cost_br['Branch'].unique().tolist())
             .add_yaxis('Total Admin',cost_br['ADMIN'].values.tolist())
             .add_yaxis('Total COGS',cost_br['COGS'].values.tolist())  
@@ -760,7 +760,7 @@ if selected == 'Cost Report':
     adver = x.query('ExpType == "ADVERTISING"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     #------------------------------------------------------
     line1 =    (
-            Line(init_opts=opts.InitOpts( width="650px", height="500px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="500px", height="500px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=x['MONTH'])
             .add_yaxis(
                  series_name="Admin",
@@ -999,7 +999,7 @@ if selected == 'Profit Report':
     data_pair = [list(z) for z in zip(x, y)]
     data_pair.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -1013,7 +1013,7 @@ if selected == 'Profit Report':
     lin_sh = lin_dat.query('Branch_S == "SHERATON"')[['MONTH_S','Profit']].sort_values(by=['MONTH_S'])
     lin_tag = lin_dat.query('Branch_S == "TAGAMOA"')[['MONTH_S','Profit']].sort_values(by=['MONTH_S'])
     line = (
-            Bar(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Bar(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(lin_dat['MONTH_S'].unique().tolist())
             .add_yaxis("Zayed", lin_za['Profit'].values.tolist())
             .add_yaxis("Shheraton", lin_sh['Profit'].values.tolist())
