@@ -277,7 +277,7 @@ if selected == 'Sales Report':
     #------------------------------------------------------
     data_pairs = [list(z) for z in zip(xs, ys)]
     data_pairs.sort(key=lambda x: x[1])
-    pie1 = (
+    pie = (
         Pie(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
@@ -291,14 +291,14 @@ if selected == 'Sales Report':
     lin_sz = lin_s.query('Branch == "ZAYED"')[['TOTAL']]
     lin_ssh = lin_s.query('Branch == "SHERATON"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
     lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
-    colors = ["#5793f3", "#d14a61", "#675bba"]
+    #colors = ["#5793f3", "#d14a61", "#675bba"]
     line = (
-            Line(init_opts=opts.InitOpts(bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_s['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
                  y_axis=lin_sz['TOTAL'],
-                color=colors[0]
+                 #color=colors[0]
                 
              )
             .add_yaxis(
@@ -329,7 +329,7 @@ if selected == 'Sales Report':
         l1,l2 = st.columns(2)
         with l1:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales by Branch </h5> " ,unsafe_allow_html=True)   
-            st_pyecharts(pie1,height=350)
+            st_pyecharts(pie,height=350)
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales During Months </h5> " ,unsafe_allow_html=True)   
             st_pyecharts(line,height=350)
@@ -389,24 +389,24 @@ if selected == 'Sales Report':
     data_pairs1 = [list(z) for z in zip(xs1, ys1)]
     data_pairs1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
         
-    .render_embed()
+    
     
     )
     
     data_pairs2 = [list(z) for z in zip(xs2, ys2)]
     data_pairs2.sort(key=lambda x: x[1])
     pie2 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs2)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
         
-    .render_embed()
+    
     
     )  
     
@@ -415,7 +415,7 @@ if selected == 'Sales Report':
     lin_tk_dv = df2.groupby(['MONTH']).sum()[['T_AWAY','DELIVERY']].reset_index()
     
     line1 = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_ca_on['MONTH'])
             .add_yaxis(
                  series_name="ON_ACC",
@@ -433,10 +433,10 @@ if selected == 'Sales Report':
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
                 datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")] 
             )
-            .render_embed()
+            
         )
     line2 = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_tk_dv['MONTH'])
             .add_yaxis(
                  series_name="Delivery",
@@ -454,23 +454,23 @@ if selected == 'Sales Report':
                 xaxis_opts=opts.AxisOpts(type_="category", boundary_gap=False),
                 datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")] 
             )
-            .render_embed()
+            
         )
     with st.expander('View Visuals'):   
         m1,m2 = st.columns(2) 
         with m1:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Cash & On Acc Sales</h5> " ,unsafe_allow_html=True)   
-            components.html(pie1 , width=1000, height=500)  
+            st_pyecharts(pie1,height=350)  
         with m2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales</h5> " ,unsafe_allow_html=True)   
-            components.html(pie2, width=1000, height=500)
+            st_pyecharts(pie2,height=350)
         m3,m4 = st.columns(2)
         with m3:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Cash & On Acc Sales During Months</h5> " ,unsafe_allow_html=True)   
-            components.html(line1 , width=1000, height=500) 
+            st_pyecharts(line1,height=350)
         with m4:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>T.Away & Delivery Sales During Months</h5> " ,unsafe_allow_html=True)   
-            components.html(line2, width=1000, height=500)
+            st_pyecharts(line2,height=350)
     #------------set radio buttons for Dayweek  ----------------------------
     #bold line separator
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
@@ -493,8 +493,8 @@ if selected == 'Sales Report':
     tot_day = df3['TOTAL'].values.tolist()
     tawy_day = df3['T_AWAY'].values.tolist()
     del_day = df3['DELIVERY'].values.tolist()
-    bar2 = (
-    Bar(init_opts=opts.InitOpts( width="1355px", height="550px",bg_color="#f0f0f0"))
+    bar = (
+    Bar(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
         .add_xaxis(day)
         .add_yaxis("Total", tot_day)
         .add_yaxis("T_Away", tawy_day)
@@ -503,11 +503,11 @@ if selected == 'Sales Report':
             title_opts=opts.TitleOpts(title=""),
             datazoom_opts=opts.DataZoomOpts(type_="inside"),
         )
-        .render_embed()
+        
 )   
     #st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
 
-    components.html(bar2, width=1800, height=550)
+    st_pyecharts(bar,height=450)
 #===============================================================================================
 # Building Cost Report     
 
@@ -640,13 +640,13 @@ if selected == 'Cost Report':
     #------------------------------------------------------
     data_pair1 = [list(z) for z in zip(xd, yd)]
     data_pair1.sort(key=lambda x: x[1])
-    pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+    pie = (
+        Pie(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
     .add("", data_pair=data_pair1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
         
-    .render_embed()
+    
     
     )
     #------------Line_chart_data----------------------------
@@ -656,7 +656,7 @@ if selected == 'Cost Report':
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     
     line = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts(bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_dat['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -683,16 +683,16 @@ if selected == 'Cost Report':
                 
             )
             
-            .render_embed()
+            
 )
     with st.expander('View Visuals'):   
         l1,l2 = st.columns(2)
         with l1:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost by Branch </h5> " ,unsafe_allow_html=True)   
-            components.html(pie1 , width=1000, height=500)
+            st_pyecharts(pie,height=350)
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Total Cost During Months </h5> " ,unsafe_allow_html=True)   
-            components.html(line , width=1000, height=500)
+            st_pyecharts(line,height=350)
     
     #------------------------------------------------------
     #bold line separator
@@ -737,7 +737,7 @@ if selected == 'Cost Report':
     admin_br =cost_br['ADMIN'].sum() 
     
     bar1 = (
-            Bar(init_opts=opts.InitOpts(width="650px", height="500px", bg_color="#f0f0f0"))
+            Bar(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
             .add_xaxis(cost_br['Branch'].unique().tolist())
             .add_yaxis('Total Admin',cost_br['ADMIN'].values.tolist())
             .add_yaxis('Total COGS',cost_br['COGS'].values.tolist())  
@@ -751,7 +751,7 @@ if selected == 'Cost Report':
                 label_opts=opts.LabelOpts(is_show=False),
                 
         )
-            .render_embed()
+            
         )
     #-------Line1 Chart Data---------------------------------
 
@@ -761,7 +761,7 @@ if selected == 'Cost Report':
     adver = x.query('ExpType == "ADVERTISING"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     #------------------------------------------------------
     line1 =    (
-            Line(init_opts=opts.InitOpts( width="650px", height="500px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=x['MONTH'])
             .add_yaxis(
                  series_name="Admin",
@@ -788,16 +788,16 @@ if selected == 'Cost Report':
                 
             )
             
-            .render_embed()
+            
         )
     with st.expander('View Visuals'):
         m1, m2 = st.columns(2)
         with m1:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Cost Type By Branch </h5> " ,unsafe_allow_html=True)
-            components.html(bar1 , width=1000, height=500)
+            st_pyecharts(bar1,height=350)
         with m2: 
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Cost Type During Months </h5> " ,unsafe_allow_html=True)  
-            components.html(line1 , width=1000, height=500)
+            st_pyecharts(line1,height=350)
     
 
     #------------------------------------------------------
@@ -1000,12 +1000,12 @@ if selected == 'Profit Report':
     data_pair = [list(z) for z in zip(x, y)]
     data_pair.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
     .add("", data_pair=data_pair)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
         
-    .render_embed()
+    
     
     )
     #------------Line_chart_data----------------------------
@@ -1024,17 +1024,17 @@ if selected == 'Profit Report':
             title_opts=opts.TitleOpts(title=""),
             datazoom_opts=[opts.DataZoomOpts(), opts.DataZoomOpts(type_="inside")],
         )
-            .render_embed()
+            
     )
             
     with st.expander('View Visuals'):   
         l1,l2 = st.columns(2)
         with l1:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Profit By Branch </h5> " ,unsafe_allow_html=True)
-            components.html(pie1 , width=1000, height=500)
+            st_pyecharts(pie1,height=350)
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #009862;'> Profit During Months </h5> " ,unsafe_allow_html=True)
-            components.html(line , width=1000, height=500)
+            st_pyecharts(line,height=350)
     
     #------------------------------------------------------
     
