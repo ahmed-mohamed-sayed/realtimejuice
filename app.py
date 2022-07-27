@@ -7,6 +7,7 @@ from streamlit_option_menu import option_menu
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 from pyecharts import options as opts
+from streamlit_echarts import st_pyecharts
 from pyecharts.charts import Bar, Line,Pie
 from streamlit_lottie import st_lottie
 import json
@@ -30,10 +31,10 @@ st.markdown(f""" <style>
         padding-left: {padding}rem;
         padding-bottom: {padding}rem;
     }} </style> """, unsafe_allow_html=True)
-def local_style(file_name):
-        with open(file_name) as f:
-            st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
-local_style(".streamlit/config.toml")
+# def local_style(file_name):
+#         with open(file_name) as f:
+#             st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
+# local_style(".streamlit/config.toml")
 
 
 #===============================================================================================
@@ -62,8 +63,8 @@ with st.sidebar:
 #===============================================================================================
 # Building Home
 if selected == 'Home':
-    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #F17E36;'> Real-time Report (Sales - Cost - Profit)</h1> " ,unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Milk Shake & Juice Shop</h3> " ,unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; font-weight:bold; color: #C00000;'> Real-time Report (Sales - Cost - Profit)</h1> " ,unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; font-weight:bold; color: #354968;'> Milk Shake & Juice Shop</h3> " ,unsafe_allow_html=True)
     #bold line separator:
     st.markdown("""<hr style="height:2x;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
     
@@ -79,7 +80,7 @@ if selected == 'Home':
         height= 800
        
     )
-    st.markdown("<h4 style='text-align: center; font-weight:bold; color: #5c4033;'> This report gets data from Google Sheets with auto-update & auto-refresh time of 10 min. Although this report is responsive. But it's preferable to open from a laptop/desktop because the library that is used for visualization is not responsive. but it gives awesome and interactive visualizations.  </h4> " ,unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; font-weight:bold; color: #354968;'> This report gets data from Google Sheets with auto-update & auto-refresh time of 10 min. Although this report is responsive. But it's preferable to open from a laptop/desktop.   </h4> " ,unsafe_allow_html=True)
 
     #bold line separator:
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
@@ -95,15 +96,15 @@ if selected == 'Home':
             speed=1,
             height = 200,  
         )
-        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Sales Report Metrics</h3> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Total Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Sales Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - No. Of Orders (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Order Value (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average No. Of Orders Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cash Sales VS On Acc Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Take Away VS Delivery Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Sales By Day Of Week (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #C00000;'> Sales Report Metrics</h3> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Total Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Average Sales Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - No. Of Orders (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Average Order Value (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Average No. Of Orders Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Cash Sales VS On Acc Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Take Away VS Delivery Sales (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Sales By Day Of Week (All or By Branch)</h6> " ,unsafe_allow_html=True)
 
 
 
@@ -116,11 +117,11 @@ if selected == 'Home':
             speed=1,
             height = 200,  
         )
-        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Cost Report Metrics</h3> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Total Cost (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Cost Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cost Distribution By Cost Type: Admin, Cogs & Advertising    (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cost Analysis for Admin, Cogs  (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #C00000;'> Cost Report Metrics</h3> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Total Cost (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Average Cost Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Cost Distribution By Cost Type: Admin, Cogs & Advertising    (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Cost Analysis for Admin, Cogs  (All or By Branch)</h6> " ,unsafe_allow_html=True)
 
     with lt3:    
         st_lottie(
@@ -128,10 +129,10 @@ if selected == 'Home':
             speed=1,
             height = 200,  
         )
-        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #B45904;'> Profit Report Metrics</h3> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Net Profit (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Average Profit Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
-        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #5c4033;'> - Cost to Profit Ratio%(All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; font-weight:bold; color: #C00000;'> Profit Report Metrics</h3> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Net Profit (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Average Profit Per Month (All or By Branch)</h6> " ,unsafe_allow_html=True)
+        st.markdown("<h6 style='text-align: center; font-weight:bold; color: #354968;'> - Cost to Profit Ratio%(All or By Branch)</h6> " ,unsafe_allow_html=True)
     #bold line separator:
     st.markdown("""<hr style="height:4px;border:none;color:#C00000;background-color:#C00000;" /> """, unsafe_allow_html=True)
     #Contact Form
@@ -277,7 +278,7 @@ if selected == 'Sales Report':
     data_pairs = [list(z) for z in zip(xs, ys)]
     data_pairs.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -290,14 +291,14 @@ if selected == 'Sales Report':
     lin_sz = lin_s.query('Branch == "ZAYED"')[['TOTAL']]
     lin_ssh = lin_s.query('Branch == "SHERATON"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
     lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
-    #colors = ["#5793f3", "#d14a61", "#675bba"]
+    colors = ["#5793f3", "#d14a61", "#675bba"]
     line = (
-            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_s['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
                  y_axis=lin_sz['TOTAL'],
-                #color=colors[0]
+                color=colors[0]
                 
              )
             .add_yaxis(
@@ -388,7 +389,7 @@ if selected == 'Sales Report':
     data_pairs1 = [list(z) for z in zip(xs1, ys1)]
     data_pairs1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -400,7 +401,7 @@ if selected == 'Sales Report':
     data_pairs2 = [list(z) for z in zip(xs2, ys2)]
     data_pairs2.sort(key=lambda x: x[1])
     pie2 = (
-        Pie(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs2)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -414,7 +415,7 @@ if selected == 'Sales Report':
     lin_tk_dv = df2.groupby(['MONTH']).sum()[['T_AWAY','DELIVERY']].reset_index()
     
     line1 = (
-            Line(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_ca_on['MONTH'])
             .add_yaxis(
                  series_name="ON_ACC",
@@ -435,7 +436,7 @@ if selected == 'Sales Report':
             .render_embed()
         )
     line2 = (
-            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_tk_dv['MONTH'])
             .add_yaxis(
                  series_name="Delivery",
@@ -493,7 +494,7 @@ if selected == 'Sales Report':
     tawy_day = df3['T_AWAY'].values.tolist()
     del_day = df3['DELIVERY'].values.tolist()
     bar2 = (
-    Bar(init_opts=opts.InitOpts( width="1050px", height="550px",bg_color="#f0f0f0"))
+    Bar(init_opts=opts.InitOpts( width="1355px", height="550px",bg_color="#f0f0f0"))
         .add_xaxis(day)
         .add_yaxis("Total", tot_day)
         .add_yaxis("T_Away", tawy_day)
@@ -506,7 +507,7 @@ if selected == 'Sales Report':
 )   
     #st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'>Day Of Week Sales</h5> " ,unsafe_allow_html=True)   
 
-    components.html(bar2, width=1500, height=550)
+    components.html(bar2, width=1800, height=550)
 #===============================================================================================
 # Building Cost Report     
 
@@ -640,7 +641,7 @@ if selected == 'Cost Report':
     data_pair1 = [list(z) for z in zip(xd, yd)]
     data_pair1.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair1)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -655,7 +656,7 @@ if selected == 'Cost Report':
     lin_tag = lin_dat.query('Branch == "TAGAMOA"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     
     line = (
-            Line(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_dat['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -736,7 +737,7 @@ if selected == 'Cost Report':
     admin_br =cost_br['ADMIN'].sum() 
     
     bar1 = (
-            Bar(init_opts=opts.InitOpts(width="450px", height="500px", bg_color="#f0f0f0"))
+            Bar(init_opts=opts.InitOpts(width="650px", height="500px", bg_color="#f0f0f0"))
             .add_xaxis(cost_br['Branch'].unique().tolist())
             .add_yaxis('Total Admin',cost_br['ADMIN'].values.tolist())
             .add_yaxis('Total COGS',cost_br['COGS'].values.tolist())  
@@ -760,7 +761,7 @@ if selected == 'Cost Report':
     adver = x.query('ExpType == "ADVERTISING"')[['MONTH','AMOUNT']].sort_values(by=['MONTH'])
     #------------------------------------------------------
     line1 =    (
-            Line(init_opts=opts.InitOpts( width="500px", height="500px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts( width="650px", height="500px",bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=x['MONTH'])
             .add_yaxis(
                  series_name="Admin",
@@ -999,7 +1000,7 @@ if selected == 'Profit Report':
     data_pair = [list(z) for z in zip(x, y)]
     data_pair.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="450px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
     .add("", data_pair=data_pair)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
@@ -1013,7 +1014,7 @@ if selected == 'Profit Report':
     lin_sh = lin_dat.query('Branch_S == "SHERATON"')[['MONTH_S','Profit']].sort_values(by=['MONTH_S'])
     lin_tag = lin_dat.query('Branch_S == "TAGAMOA"')[['MONTH_S','Profit']].sort_values(by=['MONTH_S'])
     line = (
-            Bar(init_opts=opts.InitOpts( width="500px", height="400px",bg_color="#f0f0f0"))
+            Bar(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
             .add_xaxis(lin_dat['MONTH_S'].unique().tolist())
             .add_yaxis("Zayed", lin_za['Profit'].values.tolist())
             .add_yaxis("Shheraton", lin_sh['Profit'].values.tolist())
