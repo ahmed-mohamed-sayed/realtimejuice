@@ -278,12 +278,12 @@ if selected == 'Sales Report':
     data_pairs = [list(z) for z in zip(xs, ys)]
     data_pairs.sort(key=lambda x: x[1])
     pie1 = (
-        Pie(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+        Pie(init_opts=opts.InitOpts( bg_color="#f0f0f0"))
     .add("", data_pair=data_pairs)
     .set_global_opts(title_opts=opts.TitleOpts(title=""))
     .set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
         
-    .render_embed()
+    
     
     )
     #------------Line_chart_data----------------------------
@@ -293,7 +293,7 @@ if selected == 'Sales Report':
     lin_stag = lin_s.query('Branch == "TAGAMOA"')[['MONTH','TOTAL']].sort_values(by=['MONTH'])
     colors = ["#5793f3", "#d14a61", "#675bba"]
     line = (
-            Line(init_opts=opts.InitOpts( width="650px", height="400px",bg_color="#f0f0f0"))
+            Line(init_opts=opts.InitOpts(bg_color="#f0f0f0"))
             .add_xaxis(xaxis_data=lin_s['MONTH'])
             .add_yaxis(
                  series_name="Zayed",
@@ -321,7 +321,7 @@ if selected == 'Sales Report':
                 
             )
             
-            .render_embed()
+            
             
         )
     
@@ -329,10 +329,10 @@ if selected == 'Sales Report':
         l1,l2 = st.columns(2)
         with l1:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales by Branch </h5> " ,unsafe_allow_html=True)   
-            components.html(pie1 , width=1000, height=500)
+            st_pyecharts(pie1,height=350)
         with l2:
             st.markdown("<h5 style='text-align: center; font-weight:bold; color: #B45904;'> Total Sales During Months </h5> " ,unsafe_allow_html=True)   
-            components.html(line , width=1000, height=500)
+            st_pyecharts(line,height=350)
     #--------------------------------------------------------------
     
     
